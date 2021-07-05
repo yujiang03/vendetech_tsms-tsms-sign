@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.mapper.DdHrmDataTmpMapper">
+	<resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.DdHrmDataTmp">
+		<id column="dd_user_id" jdbcType="VARCHAR" property="ddUserId" />
+		<result column="dd_name" jdbcType="VARCHAR" property="ddName" />
+		<result column="dd_emp_num" jdbcType="VARCHAR" property="ddEmpNum" />
+		<result column="dd_company_name" jdbcType="VARCHAR" property="ddCompanyName" />
+		<result column="dd_main_dept_id" jdbcType="VARCHAR" property="ddMainDeptId" />
+		<result column="dd_main_dept_num" jdbcType="VARCHAR" property="ddMainDeptNum" />
+		<result column="dd_join_date" jdbcType="DATE" property="ddJoinDate" />
+		<result column="dd_ts_excl_flag" jdbcType="INTEGER" property="ddTsExclFlag" />
+		<result column="job_status" jdbcType="INTEGER" property="jobStatus" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		dd_user_id, dd_name, dd_emp_num, dd_main_dept_id, dd_main_dept_num, 
+		dd_join_date, dd_company_name, dd_ts_excl_flag, job_status, create_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dd_hrm_data_tmp
+		where dd_user_id = #{ddUserId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="callRefreshEmpHrmData" statementType="CALLABLE">
+		{call updateEmpHrmData()}
+	</select>
+	
+	<insert id="insertSelective"
+		parameterType="com.vendetech.project.tsms.domain.DdHrmDataTmp">
+		insert into dd_hrm_data_tmp
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ddUserId != null">
+				dd_user_id,
+			</if>
+			<if test="ddName != null">
+				dd_name,
+			</if>
+			<if test="ddEmpNum != null">
+				dd_emp_num,
+			</if>
+			<if test="ddCompanyName != null">
+				dd_company_name,
+			</if>
+			<if test="ddMainDeptId != null">
+				dd_main_dept_id,
+			</if>
+			<if test="ddMainDeptNum != null">
+				dd_main_dept_num,
+			</if>
+			<if test="ddJoinDate != null">
+				dd_join_date,
+			</if>
+			<if test="ddTsExclFlag != null">
+				dd_ts_excl_flag,
+			</if>
+			<if test="jobStatus != null">
+				job_status,
+			</if>
+				create_time,			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ddUserId != null">
+				#{ddUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="ddName != null">
+				#{ddName,jdbcType=VARCHAR},
+			</if>
+			<if test="ddEmpNum != null">
+				#{ddEmpNum,jdbcType=VARCHAR},
+			</if>
+			<if test="ddCompanyName != null">
+				#{ddCompanyName,jdbcType=VARCHAR},
+			</if>
+			<if test="ddMainDeptId != null">
+				#{ddMainDeptId,jdbcType=VARCHAR},
+			</if>
+			<if test="ddMainDeptNum != null">
+				#{ddMainDeptNum,jdbcType=VARCHAR},
+			</if>
+			<if test="ddJoinDate != null">
+				#{ddJoinDate,jdbcType=DATE},
+			</if>
+			<if test="ddTsExclFlag != null">
+				#{ddTsExclFlag,jdbcType=INTEGER},
+			</if>
+			<if test="jobStatus != null">
+				#{jobStatus,jdbcType=INTEGER},
+			</if>
+			now(),
+		</trim>
+	</insert>
+</mapper>

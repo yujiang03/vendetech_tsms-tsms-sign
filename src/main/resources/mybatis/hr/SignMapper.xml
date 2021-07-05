@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vendetech.hr.mapper.SignMapper">
+
+    <select id="getSignEmployeeRelByTplIdEmployeeId" resultType="com.vendetech.hr.vo.SignEmployeeRelVO">
+        SELECT rel.id
+        , rel.template_id templateId
+        , tpl.tpl_name tplName
+        , tpl.tpl_code tplCode
+        , rel.employee_id employeeId
+        , empl.employee_name employeeName
+        , rel.create_time createTime
+        , rel.create_by_user_id createByUserId
+        , rel.modify_time modifyTime
+        , rel.modify_by_user_id modifyByUserId
+        FROM sign_employee_rel rel
+        LEFT JOIN sign_template tpl ON rel.template_id = tpl.id
+        LEFT JOIN employee empl ON rel.employee_id = empl.employee_id
+        WHERE rel.template_id = #{tplId}
+          AND rel.employee_id = #{employeeId}
+      <if test="createDate!=null">
+          and DATE_FORMAT(rel.create_time, '%Y%m%d') = #{createDate}
+      </if>
+    </select>
+
+    <insert id="addSignEmployeeRel" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sign_employee_rel
+        (template_id, employee_id, create_time, create_by_user_id, modify_time, modify_by_user_id)
+        VALUES
+        (#{templateId}, #{employeeId}, #{createTime}, #{createByUserId}, #{modifyTime}, #{modifyByUserId})
+    </insert>
+
+    <select id="getSignTemplateByStatus" parameterType="com.vendetech.hr.vo.SignTemplateVO" resultType="com.vendetech.hr.vo.SignTemplateVO">
+        SELECT id
+        , tpl_code tplCode
+        , tpl_name tplName
+        , CONCAT(#{proxyPath}, tpl_path) tplPath
+        , is_upload
+        , tpl_expire_day tplExpireDay
+        , tpl_expire_year tplExpireYear
+        , a.status
+        , (CASE a.status WHEN -1 THEN '已作废' WHEN 0 THEN '草稿' WHEN 1 THEN '已发布' WHEN 2 THEN '已到期' ELSE '' END) statusDesc
+        , a.create_time createTime
+        , a.create_by_user_id createByUserId
+        , a.modify_time modifyTime
+        , a.modify_by_user_id modifyByUserId
+        , b.company_id companyId
+        , b.company_name companyName
+        FROM sign_template a
+        left join company b on a.company_id = b.company_id
+        WHERE 1=1
+          <if test="status!=null">
+            and a.status = #{status}
+          </if>
+          <if test="companyId!=null">
+            and a.company_id = #{companyId}
+          </if>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="getEmployeeValid" resultType="com.vendetech.hr.vo.SignEmployeeVO">
+        SELECT employee.employee_id employeeId
+        , employee.employee_name employeeName
+        , employee.employee_num employeeNum
+        , employee.card_num cardNum
+        , employee.customer_id customerId
+        , employee.mobile
+        FROM employee
+        WHERE employee.status = 1
+    </select>
+
+    <select id="getSignEmployeeRel" resultType="com.vendetech.hr.vo.SignEmployeeRelVO">
+        SELECT rel.id
+        , rel.template_id templateId
+        , tpl.tpl_name tplName
+        , tpl.tpl_code tplCode
+        , rel.employee_id employeeId
+        , empl.employee_name employeeName
+        , rel.create_time createTime
+        , rel.create_by_user_id createByUserId
+        , rel.modify_time modifyTime
+        , rel.modify_by_user_id modifyByUserId
+        , com.company_id companyId
+        , com.company_name companyName
+        FROM sign_employee_rel rel
+        LEFT JOIN sign_template tpl ON rel.template_id = tpl.id
+        LEFT JOIN employee empl ON rel.employee_id = empl.employee_id
+        left join company com on tpl.company_id = com.company_id
+        ORDER BY rel.create_time DESC
+    </select>
+
+    <select id="getExpireYearByContractNo" resultType="java.lang.Integer">
+        SELECT sign_template.tpl_expire_year
+        FROM sign_record
+        LEFT JOIN sign_template ON sign_record.template_id = sign_template.id
+        WHERE sign_record.contract_no = #{contractNo}
+    </select>
+
+    <select id="getSignStatistics" resultType="com.vendetech.hr.vo.SignStatisticsVO">
+        SELECT id
+        , tpl_code tplCode
+        , tpl_name tplName
+        , sign_template.company_id companyId
+        , company_name companyName
+        , CONCAT(#{proxyPath}, tpl_path) tplPath
+        , (
+          SELECT COUNT(1) FROM sign_record sr
+          LEFT JOIN employee empl ON empl.employee_id = sr.employee_id
+          WHERE empl.status = 1 AND (sr.status >= 0 AND sr.status &lt; 5) AND sr.template_id = sign_template.id
+        ) totalShouldSign
+        , (
+          SELECT COUNT(1) FROM sign_record sr
+          LEFT JOIN employee empl ON empl.employee_id = sr.employee_id
+          WHERE empl.status = 1 AND (sr.status >= 1 AND sr.status &lt; 5) AND sr.template_id = sign_template.id
+        ) alreadySign
+        , (
+          SELECT COUNT(1) FROM sign_record sr
+          LEFT JOIN employee empl ON empl.employee_id = sr.employee_id
+          WHERE empl.status = 1 AND sr.status = 0 AND sr.template_id = sign_template.id
+        ) noneSign
+        FROM sign_template
+        left join company b on sign_template.company_id = b.company_id
+        ORDER BY sign_template.create_time DESC
+    </select>
+
+    <select id="getSignTemplate" resultType="com.vendetech.hr.vo.SignTemplateVO">
+        SELECT id
+        , tpl_code tplCode
+        , tpl_name tplName
+        , CONCAT(#{proxyPath}, tpl_path) tplPath
+        , is_upload
+        , tpl_expire_day tplExpireDay
+        , tpl_expire_year tplExpireYear
+        , a.status
+        , (CASE a.status WHEN -1 THEN '已作废' WHEN 0 THEN '草稿' WHEN 1 THEN '已发布' WHEN 2 THEN '已到期' ELSE '' END) statusDesc
+        , a.create_time createTime
+        , create_by_user_id createByUserId
+        , a.modify_time modifyTime
+        , modify_by_user_id modifyByUserId
+        , b.company_id companyId
+        , b.company_name companyName
+        FROM sign_template a
+        left join company b on a.company_id = b.company_id
+        WHERE a.status &gt; -1
+        ORDER BY a.create_time DESC
+    </select>
+
+    <update id="updateSignTemplateForEdit">
+        UPDATE sign_template
+        <set>
+            <if test="tplName != null and tplName != ''">
+                tpl_name = #{tplName},
+            </if>
+            <if test="tplExpireDay != null">
+                tpl_expire_day = #{tplExpireDay},
+            </if>
+            <if test="tplExpireYear != null">
+                tpl_expire_year = #{tplExpireYear},
+            </if>
+            <if test="tplPath != null and tplPath != ''">
+                tpl_path = #{tplPath},
+            </if>
+            modify_time = NOW(),
+            modify_by_user_id = #{modifyByUserId}
+        </set>
+        WHERE tpl_code = #{tplCode}
+    </update>
+
+    <insert id="addSignTemplate">
+        INSERT INTO sign_template (
+          id, tpl_code, tpl_name, tpl_path, is_upload, tpl_expire_day, tpl_expire_year, status, create_time,
+          create_by_user_id, modify_time, modify_by_user_id, company_id
+        ) VALUES (
+          null, #{tplCode}, #{tplName}, #{tplPath}, #{isUpload}, #{tplExpireDay}, #{tplExpireYear}, #{status},
+          #{createTime}, #{createByUserId}, #{modifyTime}, #{modifyByUserId}, #{companyId}
+        )
+    </insert>
+
+    <select id="getSignTemplateByTplCode" resultType="com.vendetech.hr.vo.SignTemplateVO">
+        SELECT id
+        , tpl_code tplCode
+        , tpl_name tplName
+        , CONCAT(#{proxyPath}, tpl_path) tplPath
+        , is_upload
+        , tpl_expire_day tplExpireDay
+        , tpl_expire_year tplExpireYear
+        , status
+        , create_time createTime
+        , create_by_user_id createByUserId
+        , modify_time modifyTime
+        , modify_by_user_id modifyByUserId
+        FROM sign_template WHERE tpl_code = #{tplCode}
+    </select>
+
+    <select id="getSignProtocolVO" parameterType="com.vendetech.hr.vo.SignProtocolVO" resultType="com.vendetech.hr.vo.SignProtocolVO">
+        SELECT sign_record.id
+        , employee.employee_name employeeName
+        , employee.employee_num employeeNum
+        , sign_template.tpl_name templateName
+        , CONCAT(#{proxyPath}, '/template', sign_template.tpl_path) templateFilePath
+        , employee.auth_status authStatus
+        , (CASE employee.auth_status
+            WHEN 0 THEN '未激活'
+            WHEN 1 THEN '未认证'
+            WHEN 2 THEN '审核通过'
+            WHEN 3 THEN '已提交待审核'
+            WHEN 4 THEN '审核不通过'
+            ELSE '' END) authStatusDesc
+        , employee.auth_date authDate
+        , CONCAT(#{proxyPath}, '/downloadPdf', sign_record.contract_file_path) contractFilePath
+        , sign_record.status signStatus
+        , (CASE sign_record.status
+            WHEN -1 THEN '已过期'
+            WHEN -2 THEN '审核不通过'
+            WHEN 0 THEN '待签署'
+            WHEN 1 THEN '待人事审核'
+            WHEN 2 THEN '审核通过待行政用印'
+            WHEN 3 THEN '已签署'
+            WHEN 4 THEN '已到期'
+            WHEN 5 THEN '已撤销'
+            ELSE '' END) signStatusDesc
+        , sign_record.sign_date signDate
+        , sign_record.notify_date notifyDate
+        , sign_record.contract_no contractNo
+        , sign_template.tpl_code tplCode
+        , sign_template.tpl_expire_year tplExpireYear
+        , com.company_id companyId
+        , com.company_name companyName
+        , com.customer_id customerId
+        FROM sign_record
+        LEFT JOIN employee ON employee.employee_id = sign_record.employee_id
+        LEFT JOIN sign_template ON sign_template.id = sign_record.template_id
+        Left join company com on com.company_id = sign_template.company_id
+        <where>
+            <if test="employeeName != null and employeeName != ''">
+                AND employee.employee_name LIKE '%${employeeName}%'
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND employee.mobile LIKE '%${mobile}%'
+            </if>
+            <if test="cardNum != null and cardNum != ''">
+                AND employee.card_num LIKE '%${cardNum}%'
+            </if>
+            <if test="employeeId != null">
+                AND sign_record.employee_id = #{employeeId}
+            </if>
+            <if test="id != null">
+                AND sign_record.id = #{id}
+            </if>
+            <if test="signStatus != null">
+                AND sign_record.status = #{signStatus}
+            </if>
+            <if test="contractNo != null">
+                AND sign_record.contract_no = #{contractNo}
+            </if>
+            <if test="companyId != null">
+                AND com.company_id = #{companyId}
+            </if>
+        </where>
+        ORDER BY sign_record.create_time DESC
+    </select>
+
+    <select id="getTotalShouldSignEmployee" resultType="com.vendetech.hr.vo.SignEmployeeVO">
+        SELECT employee.employee_id employeeId, employee.employee_name employeeName, employee.card_num cardNum
+        FROM employee
+        WHERE employee.employee_id IN
+        ( SELECT employee_id FROM sign_record WHERE template_id = #{tplId} AND status >= 0 AND status &lt; 5 )
+        AND employee.status = 1
+    </select>
+
+    <select id="getTotalAlreadySignEmployee" resultType="com.vendetech.hr.vo.SignEmployeeVO">
+        SELECT employee.employee_id employeeId, employee.employee_name employeeName, employee.card_num cardNum
+        FROM employee
+        WHERE employee.employee_id IN
+        ( SELECT employee_id FROM sign_record WHERE template_id = #{tplId} AND status >= 1 AND status &lt; 5 )
+        AND employee.status = 1
+    </select>
+
+    <select id="getSignEmployeeByTplIdAndStatus" resultType="com.vendetech.hr.vo.SignEmployeeVO">
+        SELECT employee.employee_id employeeId, employee.employee_name employeeName, employee.card_num cardNum
+        FROM employee
+        WHERE employee.employee_id IN
+        ( SELECT employee_id FROM sign_record WHERE template_id = #{tplId} AND status = #{status} )
+        AND employee.status = 1
+    </select>
+
+    <select id="getEmployeeById" resultType="com.vendetech.hr.vo.SignEmployeeVO">
+        SELECT employee_id as employeeId
+        , employee_name as employeeName
+        , employee_num as employeeNum
+        , sex
+        , card_type as cardType
+        , card_num cardNum
+        , bank_name bankName
+        , bank_card bankCard
+        , mobile
+        , customer_id customerId
+        FROM employee WHERE employee_id = #{id}
+    </select>
+
+    <update id="updateEmployeeById" parameterType="com.vendetech.project.tsms.domain.Employee">
+        update employee
+        <set>
+            <if test="bankCard != null">
+                bank_card = #{bankCard},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName},
+            </if>
+            <if test="cardNum != null">
+                card_num = #{cardNum},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile},
+            </if>
+            <if test="authStatus != null">
+                auth_status = #{authStatus},
+            </if>
+            <if test="statusDesc != null">
+                status_desc = #{statusDesc},
+            </if>
+            <if test="certStatus != null">
+                cert_status = #{certStatus},
+            </if>
+            <if test="serialNo != null">
+                serial_no = #{serialNo},
+            </if>
+        </set>
+        where employee_id = #{employeeId}
+    </update>
+
+    <select id="getSignRecordPlatformNotSign" resultType="com.vendetech.hr.vo.SignRecordVO">
+        SELECT sr.id
+                , sr.template_id templateId
+                , sr.employee_id employeeId
+                , sr.contract_no contractNo
+                , sr.notify_date notifyDate
+                , sr.notify_expire_date notifyExpireDate
+                , sr.contract_file_path contractFilePath
+                , st.tpl_code tplCode
+        FROM sign_record sr
+        LEFT JOIN sign_template st ON sr.template_id = st.id
+        <where>
+            <if test="contractNo != '' and contractNo != null">
+                AND sr.contract_no = #{contractNo}
+            </if>
+            <if test="status != null">
+                AND sr.status = #{status}
+            </if>
+        </where>
+    </select>
+
+</mapper>

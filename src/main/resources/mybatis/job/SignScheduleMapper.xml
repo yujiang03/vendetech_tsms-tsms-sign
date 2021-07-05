@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.job.mapper.SignScheduleMapper">
+
+    <select id="getEmployeeById" resultType="com.vendetech.hr.vo.SignEmployeeVO">
+        SELECT employee.employee_id employeeId
+        , employee.employee_name employeeName
+        , employee.card_num cardNum
+        , employee.mobile
+        , employee.customer_id
+        FROM employee
+        WHERE employee.employee_id = #{employeeId}
+    </select>
+
+    <select id="getSignRecordPlatformNotSign" resultType="com.vendetech.hr.vo.SignRecordVO">
+        SELECT sr.id
+        , sr.template_id templateId
+        , sr.employee_id employeeId
+        , sr.contract_no contractNo
+        , sr.notify_date notifyDate
+        , sr.notify_expire_date notifyExpireDate
+        , sr.contract_file_path contractFilePath
+        , st.tpl_code tplCode
+        FROM sign_record sr
+        LEFT JOIN sign_template st ON sr.template_id = st.id
+        WHERE sr.status = 0 AND sr.contract_file_path IS NULL
+    </select>
+
+    <insert id="batchAddSignRecord">
+        INSERT INTO sign_record (
+          template_id, employee_id, contract_no, contract_file_path, notify_date, notify_expire_date,
+          `status`, create_time, modify_time
+        ) VALUES
+        <foreach collection="list" item="r" separator=",">
+            (  #{r.templateId}, #{r.employeeId}, #{r.contractNo}, #{r.contractFilePath}, #{r.notifyDate},
+               #{r.notifyExpireDate}, #{r.status}, #{r.createTime}, #{r.modifyTime}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getSignRecordNotSynchronized" resultType="com.vendetech.hr.vo.SignRecordVO">
+        SELECT ser.template_id templateId
+        , ser.employee_id employeeId
+        , empl.mobile
+        , concat(ser.template_id, '_', st.tpl_code, '_', ser.employee_id, '_', DATE_FORMAT(now(), '%Y%m%d')) contractNo
+        , st.tpl_expire_day tplExpireDay
+        , st.tpl_code tplCode
+        FROM sign_employee_rel ser
+        LEFT JOIN sign_template st ON ser.template_id = st.id
+        LEFT JOIN employee empl ON ser.employee_id = empl.employee_id
+        WHERE NOT EXISTS (
+          SELECT 1 FROM sign_record sr
+          WHERE sr.template_id = ser.template_id
+          AND sr.employee_id = ser.employee_id
+          AND DATE_FORMAT(sr.create_time, '%Y%m%d') = DATE_FORMAT(ser.create_time, '%Y%m%d'))
+        AND st.status = 1
+        AND st.is_upload = 'Y'
+        and empl.mobile is not null
+    </select>
+
+    <select id="getSignTemplateNotUploaded" resultType="com.vendetech.hr.vo.SignTemplateVO">
+        SELECT id
+        , tpl_code tplCode
+        , tpl_name tplName
+        , tpl_path tplPath
+        , is_upload
+        , tpl_expire_day tplExpireDay
+        , tpl_expire_year tplExpireYear
+        , status
+        , create_time createTime
+        , create_by_user_id createByUserId
+        , modify_time modifyTime
+        , modify_by_user_id modifyByUserId
+        FROM sign_template WHERE is_upload = 'N' AND status = 1
+    </select>
+
+    <select id="getEmployeeWithoutCustomerId" resultType="com.vendetech.hr.vo.SignEmployeeVO">
+        SELECT employee.employee_id employeeId
+        , employee.card_num cardNum
+        FROM employee
+        WHERE employee.customer_id IS NULL
+    </select>
+
+    <select id="listSignRecord" resultType="com.vendetech.hr.vo.SignRecordVO">
+        select id, contract_no contractNo, contract_file_path contractFilePath from sign_record
+    </select>
+
+</mapper>

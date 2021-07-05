@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.vendetech.project.tsms.mapper.DdDepartmentTmpMapper">
+	<resultMap id="BaseResultMap"
+		type="com.vendetech.project.tsms.domain.DdDepartmentTmp">
+		<id column="dd_department_id" jdbcType="BIGINT"
+			property="ddDepartmentId" />
+		<result column="dd_department_fullname" jdbcType="VARCHAR"
+			property="ddDepartmentFullname" />
+		<result column="dd_department_code" jdbcType="VARCHAR"
+			property="ddDepartmentCode" />
+		<result column="dd_department_parent_id" jdbcType="BIGINT"
+			property="ddDepartmentParentId" />
+		<result column="dd_department_parent_code" jdbcType="VARCHAR"
+			property="ddDepartmentParentCode" />
+		<result column="dd_department_owner_id" jdbcType="VARCHAR"
+			property="ddDepartmentOwnerId" />
+		<result column="job_status" jdbcType="INTEGER"
+			property="jobStatus" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		dd_department_id, dd_department_fullname,
+		dd_department_code, dd_department_parent_id,
+		dd_department_parent_code, dd_department_owner_id, job_status,
+		create_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dd_department_tmp
+		where dd_department_id =
+		#{ddDepartmentId,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		dd_department_tmp
+		where dd_department_id =
+		#{ddDepartmentId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vendetech.project.tsms.domain.DdDepartmentTmp">
+		insert into dd_department_tmp (dd_department_id,
+		dd_department_fullname,
+		dd_department_code, dd_department_parent_id,
+		dd_department_parent_code, dd_department_owner_id,
+		job_status,
+		create_time)
+		values (#{ddDepartmentId,jdbcType=BIGINT},
+		#{ddDepartmentFullname,jdbcType=VARCHAR},
+		#{ddDepartmentCode,jdbcType=VARCHAR},
+		#{ddDepartmentParentId,jdbcType=BIGINT},
+		#{ddDepartmentParentCode,jdbcType=VARCHAR},
+		#{ddDepartmentOwnerId,jdbcType=VARCHAR},
+		#{jobStatus,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vendetech.project.tsms.domain.DdDepartmentTmp">
+		insert into dd_department_tmp
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ddDepartmentId != null">
+				dd_department_id,
+			</if>
+			<if test="ddDepartmentFullname != null">
+				dd_department_fullname,
+			</if>
+			<if test="ddDepartmentCode != null">
+				dd_department_code,
+			</if>
+			<if test="ddDepartmentParentId != null">
+				dd_department_parent_id,
+			</if>
+			<if test="ddDepartmentParentCode != null">
+				dd_department_parent_code,
+			</if>
+			<if test="ddDepartmentOwnerId != null">
+				dd_department_owner_id,
+			</if>
+			<if test="jobStatus != null">
+				job_status,
+			</if>
+			
+			create_time,
+			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ddDepartmentId != null">
+				#{ddDepartmentId,jdbcType=BIGINT},
+			</if>
+			<if test="ddDepartmentFullname != null">
+				#{ddDepartmentFullname,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentCode != null">
+				#{ddDepartmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentParentId != null">
+				#{ddDepartmentParentId,jdbcType=BIGINT},
+			</if>
+			<if test="ddDepartmentParentCode != null">
+				#{ddDepartmentParentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentOwnerId != null">
+				#{ddDepartmentOwnerId,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStatus != null">
+				#{jobStatus,jdbcType=INTEGER},
+			</if>
+			now(),
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vendetech.project.tsms.domain.DdDepartmentTmp">
+		update dd_department_tmp
+		<set>
+			<if test="ddDepartmentFullname != null">
+				dd_department_fullname =
+				#{ddDepartmentFullname,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentCode != null">
+				dd_department_code =
+				#{ddDepartmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentParentId != null">
+				dd_department_parent_id =
+				#{ddDepartmentParentId,jdbcType=BIGINT},
+			</if>
+			<if test="ddDepartmentParentCode != null">
+				dd_department_parent_code =
+				#{ddDepartmentParentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentOwnerId != null">
+				dd_department_owner_id =
+				#{ddDepartmentOwnerId,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStatus != null">
+				job_status = #{jobStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where dd_department_id = #{ddDepartmentId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vendetech.project.tsms.domain.DdDepartmentTmp">
+		update dd_department_tmp
+		set dd_department_fullname =
+		#{ddDepartmentFullname,jdbcType=VARCHAR},
+		dd_department_code =
+		#{ddDepartmentCode,jdbcType=VARCHAR},
+		dd_department_parent_id =
+		#{ddDepartmentParentId,jdbcType=BIGINT},
+		dd_department_parent_code =
+		#{ddDepartmentParentCode,jdbcType=VARCHAR},
+		dd_department_owner_id =
+		#{ddDepartmentOwnerId,jdbcType=VARCHAR},
+		job_status =
+		#{jobStatus,jdbcType=INTEGER},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP}
+		where dd_department_id =
+		#{ddDepartmentId,jdbcType=BIGINT}
+	</update>
+	<select id="callRefreshDepartments"
+		parameterType="java.util.HashMap" statementType="CALLABLE">
+		{call
+		insertUpdateDepatmentProcess()}
+	</select>
+</mapper>

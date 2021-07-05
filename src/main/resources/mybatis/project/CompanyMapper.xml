@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vendetech.project.tsms.project.mapper.CompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.Company" >
+    <id column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="company_address" property="companyAddress" jdbcType="VARCHAR" />
+    <result column="company_type" property="companyType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="credit_no" property="creditNo" jdbcType="VARCHAR" />
+    <result column="credit_image_path" property="creditImagePath" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_id" property="bankId" jdbcType="VARCHAR" />
+    <result column="sub_branch_name" property="subBranchName" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="legal_id" property="legalId" jdbcType="VARCHAR" />
+    <result column="legal_mobile" property="legalMobile" jdbcType="VARCHAR" />
+    <result column="legal_id_front_path" property="legalIdFrontPath" jdbcType="VARCHAR" />
+    <result column="legal_bank_card_no" property="legalBankCardNo" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="auth_status" property="authStatus" jdbcType="INTEGER" />
+    <result column="auth_date" property="authDate" jdbcType="TIMESTAMP" />
+    <result column="verify_url" property="verifyUrl" jdbcType="VARCHAR" />
+    <result column="transaction_no" property="transactionNo" jdbcType="VARCHAR" />
+    <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
+    <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
+    <result column="cert_status" property="certStatus" jdbcType="INTEGER" />
+
+    <result column="auth_sign_transaction_id" property="authSignTransactionId" jdbcType="VARCHAR" />
+    <result column="auth_sign_contract_no" property="authSignContractNo" jdbcType="VARCHAR" />
+    <result column="auth_sign_view_pdf" property="authSignViewPdf" jdbcType="VARCHAR" />
+    <result column="auth_sign_result_desc" property="authSignResultDesc" jdbcType="VARCHAR" />
+    <result column="auth_sign_status" property="authSignStatus" jdbcType="INTEGER" />
+
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="modify_user" property="modifyUser" jdbcType="BIGINT" />
+
+    <result column="proxy_path" property="proxyPath" jdbcType="VARCHAR" />
+    <result column="company_type_desc" property="companyTypeDesc" jdbcType="VARCHAR" />
+    <result column="auth_status_desc" property="authStatusDesc" jdbcType="VARCHAR" />
+    <result column="auth_sign_status_desc" property="authSignStatusDesc" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    company_id, company_name, company_address, company_type, status, credit_no, credit_image_path,
+    bank_name, bank_id, sub_branch_name, legal_name, legal_id, legal_mobile, legal_id_front_path,
+    legal_bank_card_no, customer_id, auth_status, auth_date, verify_url, transaction_no,
+    serial_no, status_desc, cert_status, auth_sign_transaction_id, auth_sign_contract_no,
+    auth_sign_view_pdf, auth_sign_result_desc, auth_sign_status, create_user, create_time,
+    modify_user, modify_time
+    , (case when company_type = 0 then '分公司'
+    when company_type = 1 then '子公司'
+    when company_type = 2 then '外部公司' else '未知类别' end) as company_type_desc
+    , (case when auth_status = 0 then '未认证'
+    when auth_status = 1 then '企业基本资料(没有申请表)已提交'
+    when auth_status = 2 then '管理员资料已提交'
+    when auth_status = 3 then '已提交待审核'
+    when auth_status = 4 then '审核通过'
+    when auth_status = 5 then '审核不通过'
+    when auth_status = 6 then '人工初审通过' else '未知认证状态' end) as auth_status_desc
+    , (case when auth_sign_status = 0 then '未授权'
+    when auth_sign_status = 1 then '已授权' else '未知授权状态' end) as auth_sign_status_desc
+  </sql>
+
+  <select id="getCompanyId" parameterType="java.lang.String" resultType="com.vendetech.project.tsms.domain.Company">
+    SELECT
+        company_id as companyId,
+        company_name as companyName
+    FROM
+        company
+    WHERE
+        company_name = #{companyName}
+  </select>
+  <select id="getCompanyNameList" resultMap="BaseResultMap">
+    select DISTINCT company_id,company_name from company
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+
+    from company
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.vendetech.project.tsms.domain.Company" >
+    select
+    <include refid="Base_Column_List" />
+
+    <if test="proxyPath!=null">
+      , #{proxyPath} as proxy_path
+    </if>
+    from company
+    <where>
+      <if test="status!=null">
+        AND `status` = #{status}
+      </if>
+      <if test="customerId=='null'">
+        AND customer_id is null
+      </if>
+      <if test="authStatus!=null">
+        AND auth_status = #{authStatus}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from company
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.vendetech.project.tsms.domain.Company" >
+    insert into company (company_id, company_name, company_address,
+                         company_type, status, credit_no,
+                         credit_image_path, bank_name, bank_id,
+                         sub_branch_name, legal_name, legal_id,
+                         legal_mobile, legal_id_front_path, legal_bank_card_no,
+                         customer_id, auth_status, auth_date,
+                         verify_url, transaction_no, serial_no,
+                         status_desc, cert_status, auth_sign_transaction_id,
+                         auth_sign_contract_no, auth_sign_view_pdf, auth_sign_result_desc,
+                         auth_sign_status, create_user, create_time,
+                         modify_user, modify_time)
+    values (#{companyId,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyAddress,jdbcType=VARCHAR},
+            #{companyType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{creditNo,jdbcType=VARCHAR},
+            #{creditImagePath,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, #{bankId,jdbcType=VARCHAR},
+            #{subBranchName,jdbcType=VARCHAR}, #{legalName,jdbcType=VARCHAR}, #{legalId,jdbcType=VARCHAR},
+            #{legalMobile,jdbcType=VARCHAR}, #{legalIdFrontPath,jdbcType=VARCHAR}, #{legalBankCardNo,jdbcType=VARCHAR},
+            #{customerId,jdbcType=VARCHAR}, #{authStatus,jdbcType=INTEGER}, #{authDate,jdbcType=TIMESTAMP},
+            #{verifyUrl,jdbcType=VARCHAR}, #{transactionNo,jdbcType=VARCHAR}, #{serialNo,jdbcType=VARCHAR},
+            #{statusDesc,jdbcType=VARCHAR}, #{certStatus,jdbcType=INTEGER}, #{authSignTransactionId,jdbcType=VARCHAR},
+            #{authSignContractNo,jdbcType=VARCHAR}, #{authSignViewPdf,jdbcType=VARCHAR}, #{authSignResultDesc,jdbcType=VARCHAR},
+            #{authSignStatus,jdbcType=INTEGER}, #{createUser,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP},
+            #{modifyUser,jdbcType=BIGINT}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.Company" >
+    insert into company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="companyAddress != null" >
+        company_address,
+      </if>
+      <if test="companyType != null" >
+        company_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="creditNo != null" >
+        credit_no,
+      </if>
+      <if test="creditImagePath != null" >
+        credit_image_path,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankId != null" >
+        bank_id,
+      </if>
+      <if test="subBranchName != null" >
+        sub_branch_name,
+      </if>
+      <if test="legalName != null" >
+        legal_name,
+      </if>
+      <if test="legalId != null" >
+        legal_id,
+      </if>
+      <if test="legalMobile != null" >
+        legal_mobile,
+      </if>
+      <if test="legalIdFrontPath != null" >
+        legal_id_front_path,
+      </if>
+      <if test="legalBankCardNo != null" >
+        legal_bank_card_no,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="authStatus != null" >
+        auth_status,
+      </if>
+      <if test="authDate != null" >
+        auth_date,
+      </if>
+      <if test="verifyUrl != null" >
+        verify_url,
+      </if>
+      <if test="transactionNo != null" >
+        transaction_no,
+      </if>
+      <if test="serialNo != null" >
+        serial_no,
+      </if>
+      <if test="statusDesc != null" >
+        status_desc,
+      </if>
+      <if test="certStatus != null" >
+        cert_status,
+      </if>
+      <if test="authSignTransactionId != null" >
+        auth_sign_transaction_id,
+      </if>
+      <if test="authSignContractNo != null" >
+        auth_sign_contract_no,
+      </if>
+      <if test="authSignViewPdf != null" >
+        auth_sign_view_pdf,
+      </if>
+      <if test="authSignResultDesc != null" >
+        auth_sign_result_desc,
+      </if>
+      <if test="authSignStatus != null" >
+        auth_sign_status,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyUser != null" >
+        modify_user,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddress != null" >
+        #{companyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null" >
+        #{companyType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creditNo != null" >
+        #{creditNo,jdbcType=VARCHAR},
+      </if>
+      <if test="creditImagePath != null" >
+        #{creditImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="subBranchName != null" >
+        #{subBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalId != null" >
+        #{legalId,jdbcType=VARCHAR},
+      </if>
+      <if test="legalMobile != null" >
+        #{legalMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdFrontPath != null" >
+        #{legalIdFrontPath,jdbcType=VARCHAR},
+      </if>
+      <if test="legalBankCardNo != null" >
+        #{legalBankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="authStatus != null" >
+        #{authStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authDate != null" >
+        #{authDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="verifyUrl != null" >
+        #{verifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionNo != null" >
+        #{transactionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDesc != null" >
+        #{statusDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="certStatus != null" >
+        #{certStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authSignTransactionId != null" >
+        #{authSignTransactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignContractNo != null" >
+        #{authSignContractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignViewPdf != null" >
+        #{authSignViewPdf,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignResultDesc != null" >
+        #{authSignResultDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignStatus != null" >
+        #{authSignStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUser != null" >
+        #{modifyUser,jdbcType=BIGINT},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.project.tsms.domain.Company" >
+    update company
+    <set >
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddress != null" >
+        company_address = #{companyAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="companyType != null" >
+        company_type = #{companyType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creditNo != null" >
+        credit_no = #{creditNo,jdbcType=VARCHAR},
+      </if>
+      <if test="creditImagePath != null" >
+        credit_image_path = #{creditImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankId != null" >
+        bank_id = #{bankId,jdbcType=VARCHAR},
+      </if>
+      <if test="subBranchName != null" >
+        sub_branch_name = #{subBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        legal_name = #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="legalId != null" >
+        legal_id = #{legalId,jdbcType=VARCHAR},
+      </if>
+      <if test="legalMobile != null" >
+        legal_mobile = #{legalMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="legalIdFrontPath != null" >
+        legal_id_front_path = #{legalIdFrontPath,jdbcType=VARCHAR},
+      </if>
+      <if test="legalBankCardNo != null" >
+        legal_bank_card_no = #{legalBankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="authStatus != null" >
+        auth_status = #{authStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authDate != null" >
+        auth_date = #{authDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="verifyUrl != null" >
+        verify_url = #{verifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionNo != null" >
+        transaction_no = #{transactionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        serial_no = #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDesc != null" >
+        status_desc = #{statusDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="certStatus != null" >
+        cert_status = #{certStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authSignTransactionId != null" >
+        auth_sign_transaction_id = #{authSignTransactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignContractNo != null" >
+        auth_sign_contract_no = #{authSignContractNo,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignViewPdf != null" >
+        auth_sign_view_pdf = #{authSignViewPdf,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignResultDesc != null" >
+        auth_sign_result_desc = #{authSignResultDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="authSignStatus != null" >
+        auth_sign_status = #{authSignStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUser != null" >
+        modify_user = #{modifyUser,jdbcType=BIGINT},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vendetech.project.tsms.domain.Company" >
+    update company
+    set company_name = #{companyName,jdbcType=VARCHAR},
+      company_address = #{companyAddress,jdbcType=VARCHAR},
+      company_type = #{companyType,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      credit_no = #{creditNo,jdbcType=VARCHAR},
+      credit_image_path = #{creditImagePath,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_id = #{bankId,jdbcType=VARCHAR},
+      sub_branch_name = #{subBranchName,jdbcType=VARCHAR},
+      legal_name = #{legalName,jdbcType=VARCHAR},
+      legal_id = #{legalId,jdbcType=VARCHAR},
+      legal_mobile = #{legalMobile,jdbcType=VARCHAR},
+      legal_id_front_path = #{legalIdFrontPath,jdbcType=VARCHAR},
+      legal_bank_card_no = #{legalBankCardNo,jdbcType=VARCHAR},
+      customer_id = #{customerId,jdbcType=VARCHAR},
+      auth_status = #{authStatus,jdbcType=INTEGER},
+      auth_date = #{authDate,jdbcType=TIMESTAMP},
+      verify_url = #{verifyUrl,jdbcType=VARCHAR},
+      transaction_no = #{transactionNo,jdbcType=VARCHAR},
+      serial_no = #{serialNo,jdbcType=VARCHAR},
+      status_desc = #{statusDesc,jdbcType=VARCHAR},
+      cert_status = #{certStatus,jdbcType=INTEGER},
+      auth_sign_transaction_id = #{authSignTransactionId,jdbcType=VARCHAR},
+      auth_sign_contract_no = #{authSignContractNo,jdbcType=VARCHAR},
+      auth_sign_view_pdf = #{authSignViewPdf,jdbcType=VARCHAR},
+      auth_sign_result_desc = #{authSignResultDesc,jdbcType=VARCHAR},
+      auth_sign_status = #{authSignStatus,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_user = #{modifyUser,jdbcType=BIGINT},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </update>
+</mapper>

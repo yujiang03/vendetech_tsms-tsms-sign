@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vendetech.hr.mapper.SignCompanySignatureMapper" >
+
+  <resultMap id="BaseResultMap" type="com.vendetech.hr.vo.SignCompanySignature" >
+    <id column="signature_id" property="signatureId" jdbcType="BIGINT" />
+    <result column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="signature_name" property="signatureName" jdbcType="VARCHAR" />
+    <result column="fdd_signature_id" property="fddSignatureId" jdbcType="VARCHAR" />
+    <result column="fdd_signature_type" property="fddSignatureType" jdbcType="INTEGER" />
+    <result column="fdd_signature_scope" property="fddSignatureScope" jdbcType="INTEGER" />
+    <result column="fdd_signature_sub_info" property="fddSignatureSubInfo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_by_user_id" property="createByUserId" jdbcType="BIGINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="modify_by_user_id" property="modifyByUserId" jdbcType="BIGINT" />
+
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithBLOBs" type="com.vendetech.hr.vo.SignCompanySignature" extends="BaseResultMap" >
+    <result column="fdd_signature_img_base64" property="fddSignatureImgBase64" jdbcType="LONGVARBINARY" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select signature_id, a.company_id, signature_name, fdd_signature_id, fdd_signature_type, fdd_signature_scope,
+           fdd_signature_sub_info, a.create_time, create_by_user_id, b.modify_time, modify_by_user_id,
+           fdd_signature_img_base64, b.company_name, b.customer_id
+    from sign_company_signature a, company b
+    where a.company_id = b.company_id
+      and signature_id = #{signatureId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectSelective" resultMap="ResultMapWithBLOBs" parameterType="com.vendetech.hr.vo.SignCompanySignature" >
+    select signature_id, a.company_id, signature_name, fdd_signature_id, fdd_signature_type, fdd_signature_scope,
+           fdd_signature_sub_info, a.create_time, create_by_user_id, b.modify_time, modify_by_user_id,
+           fdd_signature_img_base64, b.company_name, b.customer_id
+    from sign_company_signature a, company b
+    where a.company_id = b.company_id
+    <if test="companyId != null">
+      AND a.company_id = #{companyId}
+    </if>
+    <if test="fddSignatureScope != null">
+      AND fdd_signature_scope = #{fddSignatureScope}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sign_company_signature
+    where signature_id = #{signatureId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.vendetech.hr.vo.SignCompanySignature" >
+    insert into sign_company_signature (signature_id, company_id, signature_name, 
+      fdd_signature_id, fdd_signature_type, fdd_signature_scope, 
+      fdd_signature_sub_info, create_time, create_by_user_id, 
+      modify_time, modify_by_user_id, fdd_signature_img_base64
+      )
+    values (#{signatureId,jdbcType=BIGINT}, #{companyId,jdbcType=BIGINT}, #{signatureName,jdbcType=VARCHAR},
+      #{fddSignatureId,jdbcType=VARCHAR}, #{fddSignatureType,jdbcType=INTEGER}, #{fddSignatureScope,jdbcType=INTEGER},
+      #{fddSignatureSubInfo,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createByUserId,jdbcType=BIGINT}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{modifyByUserId,jdbcType=BIGINT}, #{fddSignatureImgBase64,jdbcType=LONGVARBINARY}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.vendetech.hr.vo.SignCompanySignature" >
+    insert into sign_company_signature
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="signatureId != null" >
+        signature_id,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="signatureName != null" >
+        signature_name,
+      </if>
+      <if test="fddSignatureId != null" >
+        fdd_signature_id,
+      </if>
+      <if test="fddSignatureType != null" >
+        fdd_signature_type,
+      </if>
+      <if test="fddSignatureScope != null" >
+        fdd_signature_scope,
+      </if>
+      <if test="fddSignatureSubInfo != null" >
+        fdd_signature_sub_info,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createByUserId != null" >
+        create_by_user_id,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="modifyByUserId != null" >
+        modify_by_user_id,
+      </if>
+      <if test="fddSignatureImgBase64 != null" >
+        fdd_signature_img_base64,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="signatureId != null" >
+        #{signatureId,jdbcType=BIGINT},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="signatureName != null" >
+        #{signatureName,jdbcType=VARCHAR},
+      </if>
+      <if test="fddSignatureId != null" >
+        #{fddSignatureId,jdbcType=VARCHAR},
+      </if>
+      <if test="fddSignatureType != null" >
+        #{fddSignatureType,jdbcType=INTEGER},
+      </if>
+      <if test="fddSignatureScope != null" >
+        #{fddSignatureScope,jdbcType=INTEGER},
+      </if>
+      <if test="fddSignatureSubInfo != null" >
+        #{fddSignatureSubInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createByUserId != null" >
+        #{createByUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyByUserId != null" >
+        #{modifyByUserId,jdbcType=BIGINT},
+      </if>
+      <if test="fddSignatureImgBase64 != null" >
+        #{fddSignatureImgBase64,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateSelective" parameterType="com.vendetech.hr.vo.SignCompanySignature" >
+    update sign_company_signature
+    <set >
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="signatureName != null" >
+        signature_name = #{signatureName,jdbcType=VARCHAR},
+      </if>
+      <if test="fddSignatureId != null" >
+        fdd_signature_id = #{fddSignatureId,jdbcType=VARCHAR},
+      </if>
+      <if test="fddSignatureType != null" >
+        fdd_signature_type = #{fddSignatureType,jdbcType=INTEGER},
+      </if>
+      <if test="fddSignatureScope != null" >
+        fdd_signature_scope = #{fddSignatureScope,jdbcType=INTEGER},
+      </if>
+      <if test="fddSignatureSubInfo != null" >
+        fdd_signature_sub_info = #{fddSignatureSubInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createByUserId != null" >
+        create_by_user_id = #{createByUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyByUserId != null" >
+        modify_by_user_id = #{modifyByUserId,jdbcType=BIGINT},
+      </if>
+      <if test="fddSignatureImgBase64 != null" >
+        fdd_signature_img_base64 = #{fddSignatureImgBase64,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    <where>
+      <if test="companyId != null">
+        AND company_id = #{companyId}
+      </if>
+    </where>
+  </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.hr.vo.SignCompanySignature" >
+    update sign_company_signature
+    <set >
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="signatureName != null" >
+        signature_name = #{signatureName,jdbcType=VARCHAR},
+      </if>
+      <if test="fddSignatureId != null" >
+        fdd_signature_id = #{fddSignatureId,jdbcType=VARCHAR},
+      </if>
+      <if test="fddSignatureType != null" >
+        fdd_signature_type = #{fddSignatureType,jdbcType=INTEGER},
+      </if>
+      <if test="fddSignatureScope != null" >
+        fdd_signature_scope = #{fddSignatureScope,jdbcType=INTEGER},
+      </if>
+      <if test="fddSignatureSubInfo != null" >
+        fdd_signature_sub_info = #{fddSignatureSubInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createByUserId != null" >
+        create_by_user_id = #{createByUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyByUserId != null" >
+        modify_by_user_id = #{modifyByUserId,jdbcType=BIGINT},
+      </if>
+      <if test="fddSignatureImgBase64 != null" >
+        fdd_signature_img_base64 = #{fddSignatureImgBase64,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where signature_id = #{signatureId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.vendetech.hr.vo.SignCompanySignature" >
+    update sign_company_signature
+    set company_id = #{companyId,jdbcType=BIGINT},
+      signature_name = #{signatureName,jdbcType=VARCHAR},
+      fdd_signature_id = #{fddSignatureId,jdbcType=VARCHAR},
+      fdd_signature_type = #{fddSignatureType,jdbcType=INTEGER},
+      fdd_signature_scope = #{fddSignatureScope,jdbcType=INTEGER},
+      fdd_signature_sub_info = #{fddSignatureSubInfo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by_user_id = #{createByUserId,jdbcType=BIGINT},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_by_user_id = #{modifyByUserId,jdbcType=BIGINT},
+      fdd_signature_img_base64 = #{fddSignatureImgBase64,jdbcType=LONGVARBINARY}
+    where signature_id = #{signatureId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.vendetech.hr.vo.SignCompanySignature" >
+    update sign_company_signature
+    set company_id = #{companyId,jdbcType=BIGINT},
+      signature_name = #{signatureName,jdbcType=VARCHAR},
+      fdd_signature_id = #{fddSignatureId,jdbcType=VARCHAR},
+      fdd_signature_type = #{fddSignatureType,jdbcType=INTEGER},
+      fdd_signature_scope = #{fddSignatureScope,jdbcType=INTEGER},
+      fdd_signature_sub_info = #{fddSignatureSubInfo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by_user_id = #{createByUserId,jdbcType=BIGINT},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_by_user_id = #{modifyByUserId,jdbcType=BIGINT}
+    where signature_id = #{signatureId,jdbcType=BIGINT}
+  </update>
+
+
+
+</mapper>

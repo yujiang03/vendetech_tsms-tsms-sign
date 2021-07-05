@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.system.mapper.SysUserRoleMapper">
+
+	<resultMap type="SysUserRole" id="SysUserRoleResult">
+		<result property="userId"     column="user_id"      />
+		<result property="roleId"     column="role_id"      />
+	</resultMap>
+
+	<delete id="deleteUserRoleByUserId" parameterType="Long">
+		delete from sys_user_role where user_id=#{userId}
+	</delete>
+
+	<select id="countUserRoleByRoleId" resultType="Integer">
+	    select count(1) from sys_user_role where role_id=#{roleId}
+	</select>
+	<insert id="insertUserANDRole" parameterType="SysUserRole">
+		insert into sys_user_role (user_id,role_id) values (#{userId},#{roleId})
+	</insert>
+	<update id="updateRoleByUserId" parameterType="SysUserRole">
+		update sys_user_role set role_id = #{roleId} where user_id =#{userId}
+	</update>
+	<delete id="deleteUserRole" parameterType="Long">
+		delete from sys_user_role where user_id in
+		<foreach collection="array" item="userId" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+	<select id="selectByUserId" parameterType="java.lang.Long">
+		SELECT
+			su.user_name,
+			sr.role_name,
+			su.email,
+			sr.role_id
+		FROM
+			sys_user su,
+			sys_user_role sur,
+			sys_role sr
+		WHERE
+		  su.user_id = sur.user_id
+			and sr.role_id  = sur.role_id
+		  and su.user_id = #{userId}
+	</select>
+	<insert id="batchUserRole">
+		insert into sys_user_role(user_id, role_id) values
+		<foreach item="item" index="index" collection="list" separator=",">
+			(#{item.userId},#{item.roleId})
+		</foreach>
+	</insert>
+
+	<delete id="deleteUserRoleInfo" parameterType="SysUserRole">
+		delete from sys_user_role where user_id=#{userId} and role_id=#{roleId}
+	</delete>
+
+	<delete id="deleteUserRoleInfos">
+		delete from sys_user_role where role_id=#{roleId} and user_id in
+		<foreach collection="userIds" item="userId" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+
+	<insert id="batchUserRoleBySelect">
+		insert into sys_user_role(user_id, role_id)
+		select su.user_id, 15 role_id
+		  from sys_user su
+		 where not EXISTS (select 1 from sys_user_role sr where sr.user_id = su.user_id)
+	</insert>
+</mapper> 

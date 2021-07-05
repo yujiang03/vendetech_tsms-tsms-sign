@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.adminReport.mapper.AdminReportMapper">
+
+	<select id="getEmpTsReportList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+				SELECT * FROM emp_ts_report_history
+		         where ts_month <![CDATA[>=]]> #{startDate}
+		           AND ts_month <![CDATA[<=]]> #{endDate}
+		        <if test="empName != null and empName != ''">
+	               AND employee_name like concat('%', #{empName}, '%')
+	            </if>
+	            <if test="projectName != null and projectName != ''">
+	               AND project_id = #{projectName}
+	            </if>		        
+	            <if test="projectDepartId != null and projectDepartId != ''">
+	               AND find_in_set(project_department_id,CONCAT(#{projectDepartId},',',(select IFNULL((SELECT getChildrenDepartmentById(#{projectDepartId})),''))))
+	            </if>
+	            <if test="empDepartId != null and empDepartId != ''">			        
+		           AND  find_in_set(emp_department_id ,CONCAT(#{empDepartId},',',(select IFNULL((SELECT getChildrenDepartmentById(#{empDepartId})),''))))
+	            </if>
+		         order BY employee_num, project_id, ts_month 
+		         
+		
+	</select>
+	
+	<select id="getProjectTsReportList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+				SELECT *
+		 		  FROM project_ts_report_history
+		         WHERE ts_month <![CDATA[>=]]> #{startDate}
+		           AND ts_month <![CDATA[<=]]> #{endDate}
+		           
+		        <if test="empDepartId != null and empDepartId != ''">			       
+		           and find_in_set(emp_department_id ,CONCAT(#{empDepartId},',',(select IFNULL((SELECT getChildrenDepartmentById(#{empDepartId})),''))))
+			     </if>
+		        <if test="empName != null and empName != ''">
+	               AND employee_name like concat('%', #{empName}, '%')
+	            </if>
+	            <if test="projectName != null and projectName != ''">
+	               AND project_id = #{projectName}
+	            </if>
+	            <if test="projectDepartId != null and projectDepartId != ''">
+	               AND find_in_set(project_department_id,CONCAT(#{projectDepartId},',',(select IFNULL((SELECT getChildrenDepartmentById(#{projectDepartId})),''))))
+	            </if>
+		         order BY employee_num,project_id, ts_month
+		           
+		         	
+		         	
+	</select>
+	<select id="getEmpUtilizationReportList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT *
+	          FROM emp_utilization_report_history
+	         WHERE ts_month <![CDATA[>=]]> #{startDate}
+		       AND ts_month <![CDATA[<=]]> #{endDate}
+		    <if test="empDepartId != null and empDepartId != ''">
+		       and find_in_set(emp_department_id ,CONCAT(#{empDepartId},',',(select IFNULL((SELECT getChildrenDepartmentById(#{empDepartId})),''))))
+		    </if>	         
+	 order BY emp_department_num, emp_status
+	
+	</select>
+	
+	<select id="getEmpOnboardingOffReportList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		
+		        SELECT *
+		          FROM emp_onjob_off_report
+		         WHERE ts_month <![CDATA[>=]]> #{startDate}
+		      	   AND ts_month <![CDATA[<=]]> #{endDate}
+			    <if test="empDepartId != null and empDepartId != ''">
+			       AND find_in_set(emp_department_id ,CONCAT(#{empDepartId},',',(select IFNULL((SELECT getChildrenDepartmentById(#{empDepartId})),''))))
+			    </if>
+		 order BY emp_department_num, emp_status
+	</select>
+</mapper> 

@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.timesheet.mapper.DdAttendanceDataMapper">
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.DdAttendanceData">
+    <id column="dd_attendance_id" jdbcType="BIGINT" property="ddAttendanceId" />
+    <result column="dd_userid" jdbcType="VARCHAR" property="ddUserid" />
+    <result column="employee_num" jdbcType="VARCHAR" property="employeeNum" />
+    <result column="attendance_date" jdbcType="DATE" property="attendanceDate" />
+    <result column="attendance_in1" jdbcType="TIMESTAMP" property="attendanceIn1" />
+    <result column="attendance_out1" jdbcType="TIMESTAMP" property="attendanceOut1" />
+    <result column="attendance_in2" jdbcType="INTEGER" property="attendanceIn2" />
+    <result column="attendance_out2" jdbcType="TIMESTAMP" property="attendanceOut2" />
+    <result column="attendance_minute" jdbcType="INTEGER" property="attendanceMinute" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="duty_day" jdbcType="DECIMAL" property="dutyDay" />
+    <result column="attend_day" jdbcType="DECIMAL" property="attendDay" />
+    <result column="allowed_over_hours" jdbcType="INTEGER" property="allowedOverHours" />
+    <result column="if_overtime" jdbcType="INTEGER" property="ifOvertime" />
+    <result column="if_duty" jdbcType="INTEGER" property="ifDuty" />
+    <result column="if_leave" jdbcType="INTEGER" property="ifLeave" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="leave_hours" jdbcType="INTEGER" property="leaveHours" />
+    <result column="ts_excl_flag" jdbcType="INTEGER" property="tsExclFlag" />
+    <result column="dd_create_time" jdbcType="TIMESTAMP" property="ddCreateTime" />
+    <result column="dd_modify_time" jdbcType="TIMESTAMP" property="ddModifyTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dd_attendance_id, dd_userid, employee_num, attendance_date, attendance_in1, attendance_out1, 
+    attendance_in2, attendance_out2, attendance_minute, result, duty_day, attend_day, 
+    allowed_over_hours, if_overtime, if_duty, if_leave, status, dd_create_time, dd_modify_time, 
+    create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dd_attendance_data
+    where dd_attendance_id = #{ddAttendanceId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from dd_attendance_data
+    where dd_attendance_id = #{ddAttendanceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.vendetech.project.tsms.domain.DdAttendanceData">
+    insert into dd_attendance_data (dd_userid, employee_num, 
+      attendance_date, attendance_in1, attendance_out1, 
+      attendance_in2, attendance_out2, attendance_minute, 
+      result, duty_day, attend_day, 
+      allowed_over_hours, if_overtime, if_duty, 
+      if_leave, status, dd_create_time, 
+      dd_modify_time, create_time, modify_time
+      )
+    values ( #{ddUserid,jdbcType=VARCHAR}, #{employeeNum,jdbcType=VARCHAR}, 
+      #{attendanceDate,jdbcType=DATE}, #{attendanceIn1,jdbcType=TIMESTAMP}, #{attendanceOut1,jdbcType=TIMESTAMP}, 
+      #{attendanceIn2,jdbcType=INTEGER}, #{attendanceOut2,jdbcType=TIMESTAMP}, #{attendanceMinute,jdbcType=INTEGER}, 
+      #{result,jdbcType=VARCHAR}, #{dutyDay,jdbcType=DECIMAL}, #{attendDay,jdbcType=DECIMAL}, 
+      #{allowedOverHours,jdbcType=INTEGER}, #{ifOvertime,jdbcType=INTEGER}, #{ifDuty,jdbcType=INTEGER}, 
+      #{ifLeave,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{ddCreateTime,jdbcType=TIMESTAMP}, 
+      #{ddModifyTime,jdbcType=TIMESTAMP}, sysdate(), sysdate()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.DdAttendanceData">
+    insert into dd_attendance_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ddAttendanceId != null">
+        dd_attendance_id,
+      </if>
+      <if test="ddUserid != null">
+        dd_userid,
+      </if>
+      <if test="employeeNum != null">
+        employee_num,
+      </if>
+      <if test="attendanceDate != null">
+        attendance_date,
+      </if>
+      <if test="attendanceIn1 != null">
+        attendance_in1,
+      </if>
+      <if test="attendanceOut1 != null">
+        attendance_out1,
+      </if>
+      <if test="attendanceIn2 != null">
+        attendance_in2,
+      </if>
+      <if test="attendanceOut2 != null">
+        attendance_out2,
+      </if>
+      <if test="attendanceMinute != null">
+        attendance_minute,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="dutyDay != null">
+        duty_day,
+      </if>
+      <if test="attendDay != null">
+        attend_day,
+      </if>
+      <if test="allowedOverHours != null">
+        allowed_over_hours,
+      </if>
+      <if test="ifOvertime != null">
+        if_overtime,
+      </if>
+      <if test="ifDuty != null">
+        if_duty,
+      </if>
+      <if test="ifLeave != null">
+        if_leave,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="leaveHours != null">
+        leave_hours,
+      </if>
+      <if test="tsExclFlag != null">
+        ts_excl_flag,
+      </if>
+      <if test="ddCreateTime != null">
+        dd_create_time,
+      </if>
+      <if test="ddModifyTime != null">
+        dd_modify_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ddAttendanceId != null">
+        #{ddAttendanceId,jdbcType=BIGINT},
+      </if>
+      <if test="ddUserid != null">
+        #{ddUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeNum != null">
+        #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceDate != null">
+        #{attendanceDate,jdbcType=DATE},
+      </if>
+      <if test="attendanceIn1 != null">
+        #{attendanceIn1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceOut1 != null">
+        #{attendanceOut1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceIn2 != null">
+        #{attendanceIn2,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceOut2 != null">
+        #{attendanceOut2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceMinute != null">
+        #{attendanceMinute,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyDay != null">
+        #{dutyDay,jdbcType=DECIMAL},
+      </if>
+      <if test="attendDay != null">
+        #{attendDay,jdbcType=DECIMAL},
+      </if>
+      <if test="allowedOverHours != null">
+        #{allowedOverHours,jdbcType=INTEGER},
+      </if>
+      <if test="ifOvertime != null">
+        #{ifOvertime,jdbcType=INTEGER},
+      </if>
+      <if test="ifDuty != null">
+        #{ifDuty,jdbcType=INTEGER},
+      </if>
+      <if test="ifLeave != null">
+        #{ifLeave,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="leaveHours != null">
+        #{leaveHours,jdbcType=INTEGER},
+      </if>
+      <if test="tsExclFlag != null">
+        #{tsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="ddCreateTime != null">
+        #{ddCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ddModifyTime != null">
+        #{ddModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.project.tsms.domain.DdAttendanceData">
+    update dd_attendance_data
+    <set>
+      <if test="ddUserid != null">
+        dd_userid = #{ddUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeNum != null">
+        employee_num = #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceDate != null">
+        attendance_date = #{attendanceDate,jdbcType=DATE},
+      </if>
+      <if test="attendanceIn1 != null">
+        attendance_in1 = #{attendanceIn1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceOut1 != null">
+        attendance_out1 = #{attendanceOut1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceIn2 != null">
+        attendance_in2 = #{attendanceIn2,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceOut2 != null">
+        attendance_out2 = #{attendanceOut2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceMinute != null">
+        attendance_minute = #{attendanceMinute,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyDay != null">
+        duty_day = #{dutyDay,jdbcType=DECIMAL},
+      </if>
+      <if test="attendDay != null">
+        attend_day = #{attendDay,jdbcType=DECIMAL},
+      </if>
+      <if test="allowedOverHours != null">
+        allowed_over_hours = #{allowedOverHours,jdbcType=INTEGER},
+      </if>
+      <if test="ifOvertime != null">
+        if_overtime = #{ifOvertime,jdbcType=INTEGER},
+      </if>
+      <if test="ifDuty != null">
+        if_duty = #{ifDuty,jdbcType=INTEGER},
+      </if>
+      <if test="ifLeave != null">
+        if_leave = #{ifLeave,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="leaveHours != null">
+        leave_hours = #{leaveHours,jdbcType=INTEGER},
+      </if>
+      <if test="tsExclFlag != null">
+        ts_excl_flag = #{tsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="ddCreateTime != null">
+        dd_create_time = #{ddCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ddModifyTime != null">
+        dd_modify_time = #{ddModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where dd_attendance_id = #{ddAttendanceId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vendetech.project.tsms.domain.DdAttendanceData">
+    update dd_attendance_data
+    set dd_userid = #{ddUserid,jdbcType=VARCHAR},
+      employee_num = #{employeeNum,jdbcType=VARCHAR},
+      attendance_date = #{attendanceDate,jdbcType=DATE},
+      attendance_in1 = #{attendanceIn1,jdbcType=TIMESTAMP},
+      attendance_out1 = #{attendanceOut1,jdbcType=TIMESTAMP},
+      attendance_in2 = #{attendanceIn2,jdbcType=INTEGER},
+      attendance_out2 = #{attendanceOut2,jdbcType=TIMESTAMP},
+      attendance_minute = #{attendanceMinute,jdbcType=INTEGER},
+      result = #{result,jdbcType=VARCHAR},
+      duty_day = #{dutyDay,jdbcType=DECIMAL},
+      attend_day = #{attendDay,jdbcType=DECIMAL},
+      allowed_over_hours = #{allowedOverHours,jdbcType=INTEGER},
+      if_overtime = #{ifOvertime,jdbcType=INTEGER},
+      if_duty = #{ifDuty,jdbcType=INTEGER},
+      if_leave = #{ifLeave,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      dd_create_time = #{ddCreateTime,jdbcType=TIMESTAMP},
+      dd_modify_time = #{ddModifyTime,jdbcType=TIMESTAMP},
+      -- create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = sysdate()
+    where dd_attendance_id = #{ddAttendanceId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByEmpNumDate" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(dd_attendance_id)
+    from dd_attendance_data
+    where employee_num = #{empNum,jdbcType=VARCHAR} and attendance_date = #{attdDate,jdbcType=DATE}
+  </select>
+  <update id="updateByEmpNumDatesSelective">
+    update dd_attendance_data
+    <set>
+      <if test="ddUserid != null">
+        dd_userid = #{ddUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceDate != null">
+        attendance_date = #{attendanceDate,jdbcType=DATE},
+      </if>
+      <if test="attendanceIn1 != null">
+        attendance_in1 = #{attendanceIn1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceOut1 != null">
+        attendance_out1 = #{attendanceOut1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceIn2 != null">
+        attendance_in2 = #{attendanceIn2,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceOut2 != null">
+        attendance_out2 = #{attendanceOut2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceMinute != null">
+        attendance_minute = #{attendanceMinute,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyDay != null">
+        duty_day = #{dutyDay,jdbcType=DECIMAL},
+      </if>
+      <if test="attendDay != null">
+        attend_day = #{attendDay,jdbcType=DECIMAL},
+      </if>
+      <if test="allowedOverHours != null">
+        allowed_over_hours = #{allowedOverHours,jdbcType=INTEGER},
+      </if>
+      <if test="ifOvertime != null">
+        if_overtime = #{ifOvertime,jdbcType=INTEGER},
+      </if>
+      <if test="ifDuty != null">
+        if_duty = #{ifDuty,jdbcType=INTEGER},
+      </if>
+      <if test="ifLeave != null">
+        if_leave = #{ifLeave,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="leaveHours != null">
+        leave_hours = #{leaveHours,jdbcType=INTEGER},
+      </if>
+      <if test="tsExclFlag != null">
+        ts_excl_flag = #{tsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="ddCreateTime != null">
+        dd_create_time = #{ddCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ddModifyTime != null">
+        dd_modify_time = #{ddModifyTime,jdbcType=TIMESTAMP},
+      </if>
+        modify_time = sysdate()
+    </set>
+    where employee_num = #{employeeNum,jdbcType=VARCHAR} and attendance_date = #{attendanceDate,jdbcType=DATE}
+  </update>
+  <update id="updateByDdUseridDatesSelective">
+    update dd_attendance_data
+    <set>
+      <if test="attendanceIn1 != null">
+        attendance_in1 = #{attendanceIn1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceOut1 != null">
+        attendance_out1 = #{attendanceOut1,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceIn2 != null">
+        attendance_in2 = #{attendanceIn2,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceOut2 != null">
+        attendance_out2 = #{attendanceOut2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attendanceMinute != null">
+        attendance_minute = #{attendanceMinute,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyDay != null">
+        duty_day = #{dutyDay,jdbcType=DECIMAL},
+      </if>
+      <if test="attendDay != null">
+        attend_day = #{attendDay,jdbcType=DECIMAL},
+      </if>
+      <if test="allowedOverHours != null">
+        allowed_over_hours = #{allowedOverHours,jdbcType=INTEGER},
+      </if>
+      <if test="ifOvertime != null">
+        if_overtime = #{ifOvertime,jdbcType=INTEGER},
+      </if>
+      <if test="ifDuty != null">
+        if_duty = #{ifDuty,jdbcType=INTEGER},
+      </if>
+      <if test="ifLeave != null">
+        if_leave = #{ifLeave,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="leaveHours != null">
+        leave_hours = #{leaveHours,jdbcType=INTEGER},
+      </if>
+      <if test="tsExclFlag != null">
+        ts_excl_flag = #{tsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="ddCreateTime != null">
+        dd_create_time = #{ddCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ddModifyTime != null">
+        dd_modify_time = #{ddModifyTime,jdbcType=TIMESTAMP},
+      </if>
+        modify_time = sysdate()
+    </set>
+    where dd_userid = #{ddUserid,jdbcType=VARCHAR} and attendance_date = #{attendanceDate,jdbcType=DATE}
+  </update>
+</mapper>

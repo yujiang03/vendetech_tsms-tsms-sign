@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.timesheet.mapper.EmpTsAttdAsgnRecordMapper">
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.EmpTsAttdAsgnRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="employee_id" jdbcType="BIGINT" property="employeeId" />
+    <result column="employee_num" jdbcType="VARCHAR" property="employeeNum" />
+    <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+    <result column="ts_date" jdbcType="DATE" property="tsDate" />
+    <result column="assign_type" jdbcType="INTEGER" property="assignType" />
+    <result column="assign_project_id" jdbcType="BIGINT" property="assignProjectId" />
+    <result column="need_assign" jdbcType="INTEGER" property="needAssign" />
+    <result column="assigned_status" jdbcType="INTEGER" property="assignedStatus" />
+    <result column="unmatch_result" jdbcType="VARCHAR" property="unmatchResult" />
+    <result column="assigner" jdbcType="VARCHAR" property="assigner" />
+    <result column="if_duty" jdbcType="INTEGER" property="ifDuty" />
+    <result column="if_overtime" jdbcType="INTEGER" property="ifOvertime" />
+    <result column="overtime_hours" jdbcType="INTEGER" property="overtimeHours" />
+    <result column="attendance_result" jdbcType="VARCHAR" property="attendanceResult" />
+    <result column="attendance_day_hours" jdbcType="INTEGER" property="attendanceDayHours" />
+    <result column="if_issue" jdbcType="INTEGER" property="ifIssue" />
+    <result column="source" jdbcType="INTEGER" property="source" />
+    <result column="source_by" jdbcType="VARCHAR" property="sourceBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <resultMap id="ReportRecordMap" type="java.util.HashMap">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="employee_id" jdbcType="BIGINT" property="employeeId" />
+    <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+    <result column="employee_num" jdbcType="VARCHAR" property="employeeNum" />
+    <result column="employee_department_name" jdbcType="VARCHAR" property="employeeDepartmentName" />
+    <result column="employee_department_num" jdbcType="VARCHAR" property="employeeDepartmentNum" />
+    <result column="employee_company" jdbcType="VARCHAR" property="employeeCompany" />
+    <result column="attd_date" jdbcType="VARCHAR" property="attdDate" />
+    <result column="assign_type" jdbcType="VARCHAR" property="assignType" />
+    <result column="assign_project_id" jdbcType="BIGINT" property="assignProjectId" />
+    <result column="assign_project_name" jdbcType="VARCHAR" property="assignProjectName" />
+    <result column="assign_project_num" jdbcType="VARCHAR" property="assignProjectNum" />
+    <result column="project_department_name" jdbcType="VARCHAR" property="projectDepartmentName" />
+    <result column="project_department_num" jdbcType="VARCHAR" property="projectDepartmentNum" />
+    <result column="project_company" jdbcType="VARCHAR" property="projectCompany" />
+    <result column="contract_status" jdbcType="VARCHAR" property="contractStatus" />
+    <result column="attendance_day_hours" jdbcType="INTEGER" property="attendanceDayHours" />
+    <result column="assigner" jdbcType="VARCHAR" property="assigner" />
+    <result column="assigner_name" jdbcType="VARCHAR" property="assignerName" />
+    <result column="ts_month" jdbcType="VARCHAR" property="tsMonth" />
+    <result column="input_hours" jdbcType="INTEGER" property="inputHours" />
+    <result column="total_input_hours" jdbcType="INTEGER" property="totalInputHours" />
+    <result column="total_assign_hours" jdbcType="INTEGER" property="totalAssignHours" />
+    <result column="proportion" jdbcType="VARCHAR" property="proportion" />
+    <result column="department_diff" jdbcType="VARCHAR" property="departmentDiff" />
+    <result column="company_diff" jdbcType="VARCHAR" property="companyDiff" />
+    <result column="contract_status" jdbcType="VARCHAR" property="contractStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, employee_id, employee_num, employee_name, ts_date, assign_type, assign_project_id, 
+    need_assign, assigned_status, unmatch_result, if_duty, if_overtime, overtime_hours, 
+    attendance_result, attendance_day_hours, if_issue, source, source_by, create_time, 
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from emp_ts_attd_asgn_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from emp_ts_attd_asgn_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.vendetech.project.tsms.domain.EmpTsAttdAsgnRecord">
+    insert into emp_ts_attd_asgn_record (id, employee_id, employee_num, 
+      employee_name, ts_date, assign_type, 
+      assign_project_id, need_assign, assigned_status, 
+      unmatch_result, if_duty, if_overtime, 
+      overtime_hours, attendance_result, attendance_day_hours, 
+      if_issue, source, source_by, 
+      create_time, modify_time)
+    values (#{id,jdbcType=BIGINT}, #{employeeId,jdbcType=BIGINT}, #{employeeNum,jdbcType=VARCHAR}, 
+      #{employeeName,jdbcType=VARCHAR}, #{tsDate,jdbcType=DATE}, #{assignType,jdbcType=INTEGER}, 
+      #{assignProjectId,jdbcType=BIGINT}, #{needAssign,jdbcType=INTEGER}, #{assignedStatus,jdbcType=INTEGER}, 
+      #{unmatchResult,jdbcType=VARCHAR}, #{ifDuty,jdbcType=INTEGER}, #{ifOvertime,jdbcType=INTEGER}, 
+      #{overtimeHours,jdbcType=INTEGER}, #{attendanceResult,jdbcType=VARCHAR}, #{attendanceDayHours,jdbcType=INTEGER}, 
+      #{ifIssue,jdbcType=INTEGER}, #{source,jdbcType=INTEGER}, #{sourceBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.EmpTsAttdAsgnRecord">
+    insert into emp_ts_attd_asgn_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="employeeId != null">
+        employee_id,
+      </if>
+      <if test="employeeNum != null">
+        employee_num,
+      </if>
+      <if test="employeeName != null">
+        employee_name,
+      </if>
+      <if test="tsDate != null">
+        ts_date,
+      </if>
+      <if test="assignType != null">
+        assign_type,
+      </if>
+      <if test="assignProjectId != null">
+        assign_project_id,
+      </if>
+      <if test="needAssign != null">
+        need_assign,
+      </if>
+      <if test="assignedStatus != null">
+        assigned_status,
+      </if>
+      <if test="unmatchResult != null">
+        unmatch_result,
+      </if>
+      <if test="ifDuty != null">
+        if_duty,
+      </if>
+      <if test="ifOvertime != null">
+        if_overtime,
+      </if>
+      <if test="overtimeHours != null">
+        overtime_hours,
+      </if>
+      <if test="attendanceResult != null">
+        attendance_result,
+      </if>
+      <if test="attendanceDayHours != null">
+        attendance_day_hours,
+      </if>
+      <if test="ifIssue != null">
+        if_issue,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="sourceBy != null">
+        source_by,
+      </if>
+      <if test="assigner != null">
+        assigner,
+      </if>
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeNum != null">
+        #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null">
+        #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tsDate != null">
+        #{tsDate,jdbcType=DATE},
+      </if>
+      <if test="assignType != null">
+        #{assignType,jdbcType=INTEGER},
+      </if>
+      <if test="assignProjectId != null">
+        #{assignProjectId,jdbcType=BIGINT},
+      </if>
+      <if test="needAssign != null">
+        #{needAssign,jdbcType=INTEGER},
+      </if>
+      <if test="assignedStatus != null">
+        #{assignedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="unmatchResult != null">
+        #{unmatchResult,jdbcType=VARCHAR},
+      </if>
+      <if test="ifDuty != null">
+        #{ifDuty,jdbcType=INTEGER},
+      </if>
+      <if test="ifOvertime != null">
+        #{ifOvertime,jdbcType=INTEGER},
+      </if>
+      <if test="overtimeHours != null">
+        #{overtimeHours,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceResult != null">
+        #{attendanceResult,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceDayHours != null">
+        #{attendanceDayHours,jdbcType=INTEGER},
+      </if>
+      <if test="ifIssue != null">
+        #{ifIssue,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceBy != null">
+        #{sourceBy,jdbcType=VARCHAR},
+      </if>
+      <if test="assigner != null">
+        assigner = #{assigner,jdbcType=VARCHAR},
+      </if>
+        sysdate(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.project.tsms.domain.EmpTsAttdAsgnRecord">
+    update emp_ts_attd_asgn_record
+    <set>
+      <if test="employeeId != null">
+        employee_id = #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeNum != null">
+        employee_num = #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null">
+        employee_name = #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tsDate != null">
+        ts_date = #{tsDate,jdbcType=DATE},
+      </if>
+      <if test="assignType != null">
+        assign_type = #{assignType,jdbcType=INTEGER},
+      </if>
+        assign_project_id = #{assignProjectId,jdbcType=BIGINT},
+      <if test="needAssign != null">
+        need_assign = #{needAssign,jdbcType=INTEGER},
+      </if>
+      <if test="assignedStatus != null">
+        assigned_status = #{assignedStatus,jdbcType=INTEGER},
+      </if>
+      <if test="unmatchResult != null">
+        unmatch_result = #{unmatchResult,jdbcType=VARCHAR},
+      </if>
+      <if test="ifDuty != null">
+        if_duty = #{ifDuty,jdbcType=INTEGER},
+      </if>
+      <if test="ifOvertime != null">
+        if_overtime = #{ifOvertime,jdbcType=INTEGER},
+      </if>
+      <if test="overtimeHours != null">
+        overtime_hours = #{overtimeHours,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceResult != null">
+        attendance_result = #{attendanceResult,jdbcType=VARCHAR},
+      </if>
+      <if test="attendanceDayHours != null">
+        attendance_day_hours = #{attendanceDayHours,jdbcType=INTEGER},
+      </if>
+      <if test="ifIssue != null">
+        if_issue = #{ifIssue,jdbcType=INTEGER},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="sourceBy != null">
+        source_by = #{sourceBy,jdbcType=VARCHAR},
+      </if>
+      <if test="assigner != null">
+        assigner = #{assigner,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+        modify_time = sysdate(),
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vendetech.project.tsms.domain.EmpTsAttdAsgnRecord">
+    update emp_ts_attd_asgn_record
+    set employee_id = #{employeeId,jdbcType=BIGINT},
+      employee_num = #{employeeNum,jdbcType=VARCHAR},
+      employee_name = #{employeeName,jdbcType=VARCHAR},
+      ts_date = #{tsDate,jdbcType=DATE},
+      assign_type = #{assignType,jdbcType=INTEGER},
+      assign_project_id = #{assignProjectId,jdbcType=BIGINT},
+      need_assign = #{needAssign,jdbcType=INTEGER},
+      assigned_status = #{assignedStatus,jdbcType=INTEGER},
+      unmatch_result = #{unmatchResult,jdbcType=VARCHAR},
+      if_duty = #{ifDuty,jdbcType=INTEGER},
+      if_overtime = #{ifOvertime,jdbcType=INTEGER},
+      overtime_hours = #{overtimeHours,jdbcType=INTEGER},
+      attendance_result = #{attendanceResult,jdbcType=VARCHAR},
+      attendance_day_hours = #{attendanceDayHours,jdbcType=INTEGER},
+      if_issue = #{ifIssue,jdbcType=INTEGER},
+      source = #{source,jdbcType=INTEGER},
+      source_by = #{sourceBy,jdbcType=VARCHAR},
+      assigner = #{assigner,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectUnmatchList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from emp_ts_attd_asgn_record
+    where employee_id in (SELECT ed.employee_id FROM employee_department ed WHERE 1 = 1
+      <if test="depts != null">
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+      </if>
+    )
+	and need_assign = 1 and assigned_status = 0 
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+  </select>
+  <select id="selectUnmatchListByMonth" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from emp_ts_attd_asgn_record
+    where employee_num = #{empNum,jdbcType=VARCHAR}
+	and need_assign = 1 and assigned_status = 0 
+	and month(ts_date) = #{month,jdbcType=VARCHAR} and year(ts_date) = #{year,jdbcType=VARCHAR}
+  </select>
+  <select id="selectUnmatchListByDeptsMonth" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from emp_ts_attd_asgn_record
+    where employee_id in (SELECT ed.employee_id FROM employee_department ed WHERE 1 = 1
+      <if test="depts != null">
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+			FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+	  </if>
+	)
+	and need_assign = 1 and assigned_status = 0 
+	and month(ts_date) = #{month,jdbcType=VARCHAR} and year(ts_date) = #{year,jdbcType=VARCHAR}
+  </select>
+  <select id="getNeedAssignHours" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(*) * 8
+    from emp_ts_attd_asgn_record
+    where employee_id in (SELECT ed.employee_id FROM employee_department ed WHERE 1 = 1
+      <if test="depts != null">
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+      </if>
+    ) and need_assign = 1 
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+  </select>
+  <select id="getAtcualAssignHours" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(*) * 8
+    from emp_ts_attd_asgn_record
+    where employee_id in (SELECT ed.employee_id FROM employee_department ed WHERE 1 = 1
+      <if test="depts != null">
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+      </if>
+    ) and need_assign = 1 and assigned_status = 1
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+  </select>
+  <select id="getEmpNeedAssignHours" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(*) * 8
+    from emp_ts_attd_asgn_record
+    where employee_id = #{empId,jdbcType=BIGINT} 
+	and need_assign = 1 
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+  </select>
+  <select id="getEmpAtcualAssignHours" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(*) * 8
+    from emp_ts_attd_asgn_record
+    where employee_id = #{empId,jdbcType=BIGINT} 
+    and need_assign = 1 and assigned_status = 1
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+  </select>
+
+  <select id="sumNormalTimesheetList" parameterType="java.util.HashMap" resultMap="ReportRecordMap">
+    select 
+    r.employee_id, r.employee_num, r.employee_name, 
+    case assign_type 
+    when 1 then '项目中'
+    when 2 then '培训'
+    when 3 then '闲置'
+    else ''
+    end as assign_type,
+    case assign_type 
+    when 1 then p.project_name
+    when 2 then p.project_name
+    when 3 then '闲置'
+	else ''
+	end as assign_project_name,
+	assign_project_id, 
+	project_num as assign_project_num, 
+    md.department_name as employee_department_name, 
+    md.department_num as employee_department_num,
+	ifnull(sum(attendance_day_hours), 0) as attendance_day_hours
+    from emp_ts_attd_asgn_record r
+	left join project p on p.project_id = r.assign_project_id
+    left join employee e on e.employee_id = r.employee_id 
+    left join department md on md.department_id = e.main_dept_id
+    left join department pd on pd.department_id = p.project_department_id
+    where 1=1 
+      <if test="ddDptId != null">
+    and r.employee_id in (SELECT DISTINCT(emp.employee_id) FROM employee emp, employee_department ed WHERE
+		emp.employee_id = ed.employee_id AND ed.department_id IN (SELECT department_id FROM department WHERE
+			FIND_IN_SET(department_id, getChildrenDepartment (#{ddDptId,jdbcType=VARCHAR}))) )
+      </if>
+      <if test="depts != null">
+    and r.employee_id in (SELECT ed.employee_id FROM employee_department ed WHERE 1 = 1
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+    )
+      </if>
+	and need_assign = 1 and assigned_status = 1 and r.if_issue = 0
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+      <if test="projectId != null">
+      and assign_project_id = #{projectId,jdbcType=BIGINT} 
+      </if>
+      <if test="empKeyword != null">
+      and (e.employee_num like concat('%', #{empKeyword}, '%') or e.employee_name like concat('%', #{empKeyword}, '%')) 
+      </if>
+      <if test="companyId != null">
+      and e.company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      <if test="projectCompanyId != null">
+      and p.project_company_id = #{projectCompanyId,jdbcType=BIGINT}
+      </if>
+      <if test="ddPrjDptId != null">
+      and pd.dd_department_id = #{ddPrjDptId,jdbcType=VARCHAR}
+      </if>
+    group by r.employee_num, r.employee_id, r.employee_name, assign_type, assign_project_id
+  </select>
+  <select id="selectNormalTimesheetList" parameterType="java.util.HashMap" resultMap="ReportRecordMap">
+	select 
+	r.employee_id,
+	r.employee_num,
+	r.employee_name,
+	e.company_name AS employee_company,
+	md.department_name as employee_department_name,
+	date(r.ts_date) AS attd_date,
+	r.assign_type assign_type_id,
+	case assign_type 
+	when 1 then '项目中'
+	when 2 then '培训'
+	when 3 then '闲置'
+	else ''
+	end as assign_type,
+	case assign_type 
+	when 1 then p.project_name
+    when 2 then p.project_name
+	else ''
+	end as assign_project_name,
+	assign_project_id,
+	ifnull(project_num, '') AS assign_project_num,
+	ifnull(d.department_name, '') AS project_department_name,
+	ifnull(d.department_num, '') AS project_department_num,
+	ifnull(c.company_name, '') AS project_company,
+	case contract_status
+    when 1 then '已签'
+    when 0 then '待签'
+    else ''
+    end as contract_status,
+	ifnull(attendance_day_hours, 0) AS attendance_day_hours,
+	ifnull(assigner, '') as assigner, 
+	ifnull(ea.employee_name, '') as assigner_name
+	FROM emp_ts_attd_asgn_record r
+	LEFT JOIN project p ON p.project_id = r.assign_project_id
+	LEFT JOIN department d ON p.project_department_id = d.department_id
+	LEFT JOIN company c ON p.project_company_id = c.company_id
+	LEFT JOIN employee e ON e.employee_id = r.employee_id
+	LEFT JOIN employee ea on ea.employee_num = r.assigner
+	left join department md on md.department_id = e.main_dept_id
+    where 1=1 
+      <if test="ddDptId != null">
+    and r.employee_id in (SELECT DISTINCT(emp.employee_id) FROM employee emp, employee_department ed WHERE
+		emp.employee_id = ed.employee_id AND ed.department_id IN (SELECT department_id FROM department WHERE
+			FIND_IN_SET(department_id, getChildrenDepartment (#{ddDptId,jdbcType=VARCHAR}))) )
+      </if>
+      <if test="depts != null">
+    and r.employee_id in (SELECT ed.employee_id FROM employee_department ed WHERE 1 = 1
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+    )
+      </if>
+	and need_assign = 1 and assigned_status = 1 and r.if_issue = 0
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+      <if test="projectId != null">
+      and assign_project_id = #{projectId,jdbcType=BIGINT} 
+      </if>
+    order by ts_date, r.employee_num
+  </select>
+  <select id="countNormalTimesheetList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count('id')
+    from emp_ts_attd_asgn_record
+    where employee_id = #{empId,jdbcType=BIGINT} 
+	and need_assign = 1 and assigned_status = 1 and if_issue = 0
+	and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+      <if test="assignProjectId != null">
+      and assign_project_id = #{projectId,jdbcType=BIGINT}
+      </if>
+  </select>
+  <select id="sumHistoryTimesheetList" parameterType="java.util.HashMap" resultMap="ReportRecordMap">
+    select 
+    r.employee_id, r.employee_num, r.employee_name, 
+    case assign_type 
+    when 1 then '项目中'
+    when 2 then '培训'
+    when 3 then '闲置'
+    else ''
+    end as assign_type,
+    case assign_type 
+    when 1 then p.project_name
+    when 2 then p.project_name
+    when 3 then '闲置'
+    else ''
+    end as assign_project_name,
+    assign_project_id, 
+    project_num as assign_project_num, 
+    md.department_name as employee_department_name, 
+    ifnull(sum(attendance_day_hours), 0) as attendance_day_hours
+    from emp_ts_attd_asgn_record_history r
+    left join project_history p on p.project_id = r.assign_project_id
+    left join employee e on e.employee_id = r.employee_id 
+	left join department md on md.department_id = e.main_dept_id
+    left join department pd on pd.department_id = p.project_department_id
+    where 1=1 
+      <if test="ddDptId != null">
+    and r.employee_id in (SELECT DISTINCT(emp.employee_id) FROM employee emp, employee_department_history ed WHERE
+        emp.employee_id = ed.employee_id AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, getChildrenDepartment (#{ddDptId,jdbcType=VARCHAR}))) )
+      </if>
+      <if test="depts != null">
+    and r.employee_id in (SELECT ed.employee_id FROM employee_department_history ed WHERE 1 = 1
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+    )
+      </if>
+    and need_assign = 1 and assigned_status = 1 and r.if_issue = 0
+    and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+      <if test="projectId != null">
+      and assign_project_id = #{projectId,jdbcType=BIGINT} 
+      </if>
+      <if test="empKeyword != null">
+      and (e.employee_num like concat('%', #{empKeyword}, '%') or e.employee_name like concat('%', #{empKeyword}, '%')) 
+      </if>
+      <if test="companyId != null">
+      and e.company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      <if test="projectCompanyId != null">
+      and p.project_company_id = #{projectCompanyId,jdbcType=BIGINT}
+      </if>
+      <if test="ddPrjDptId != null">
+      and pd.dd_department_id = #{ddPrjDptId,jdbcType=VARCHAR}
+      </if>
+    group by r.employee_num, r.employee_id, r.employee_name, assign_type, assign_project_id
+  </select>
+  <select id="selectHistoryTimesheetList" parameterType="java.util.HashMap" resultMap="ReportRecordMap">
+    select 
+    r.employee_id,
+    r.employee_num,
+    r.employee_name,
+    e.company_name AS employee_company,
+    md.department_name as employee_department_name,
+    md.department_num as employee_department_num, 
+    date(r.ts_date) AS attd_date,
+    r.assign_type assign_type_id,
+    case assign_type 
+    when 1 then '项目中'
+    when 2 then '培训'
+    when 3 then '闲置'
+    else ''
+    end as assign_type,
+    case assign_type 
+    when 1 then p.project_name
+    when 2 then p.project_name
+    else ''
+    end as assign_project_name,
+    assign_project_id,
+    ifnull(project_num, '') AS assign_project_num,
+    ifnull(d.department_name, '') AS project_department_name,
+    ifnull(d.department_num, '') AS project_department_num,
+    ifnull(c.company_name, '') AS project_company,
+    case contract_status
+    when 1 then '已签'
+    when 0 then '待签'
+    else ''
+    end as contract_status,
+    ifnull(attendance_day_hours, 0) AS attendance_day_hours,
+    ifnull(assigner, '') as assigner, 
+    ifnull(ea.employee_name, '') as assigner_name
+    FROM emp_ts_attd_asgn_record_history r
+    LEFT JOIN project_history p ON p.project_id = r.assign_project_id and p.year_month = concat(year(ts_date),if(month(ts_date)<![CDATA[<]]>10,concat('0',month(ts_date)),month(ts_date)))
+    LEFT JOIN department d ON p.project_department_id = d.department_id
+    LEFT JOIN company c ON p.project_company_id = c.company_id
+    LEFT JOIN employee e ON e.employee_id = r.employee_id
+    LEFT JOIN employee ea on ea.employee_num = r.assigner
+	left join department md on md.department_id = e.main_dept_id
+    where 1=1 
+      <if test="ddDptId != null">
+    and r.employee_id in (SELECT DISTINCT(emp.employee_id) FROM employee emp, employee_department_history ed WHERE
+        emp.employee_id = ed.employee_id AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, getChildrenDepartment (#{ddDptId,jdbcType=VARCHAR}))) )
+      </if> 
+      <if test="depts != null">
+    and r.employee_id in (SELECT ed.employee_id FROM employee_department_history ed WHERE 1 = 1
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+    )
+      </if>
+    and need_assign = 1 and assigned_status = 1 and r.if_issue = 0
+    and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+      <if test="projectId != null">
+      and assign_project_id = #{projectId,jdbcType=BIGINT} 
+      </if>
+    order by ts_date, r.employee_num
+  </select>
+  <select id="freshAllEmpTsAttdAsgnRecord" parameterType="java.util.HashMap" statementType="CALLABLE">
+		{call freshAllEmpTsAttdAsgnRecord(#{startDate, mode=IN, jdbcType=VARCHAR}, #{msg, mode=OUT, jdbcType=VARCHAR})}
+  </select>
+  <select id="freshAllEmpTsAttdAsgnRecordByMonth" parameterType="java.util.HashMap" statementType="CALLABLE">
+		{call freshAllEmpTsAttdAsgnRecordByMonth(#{fromDate, mode=IN, jdbcType=INTEGER}, #{toDate, mode=IN, jdbcType=INTEGER}, #{msg, mode=OUT, jdbcType=VARCHAR})}
+  </select>
+  <select id="freshEmpTsAttdAsgnRecord" parameterType="java.util.HashMap" statementType="CALLABLE">
+		{call freshEmpTsAttdAsgnRecord(#{tsAssgnId, mode=IN, jdbcType=BIGINT}, #{msg, mode=OUT, jdbcType=VARCHAR})}
+  </select>
+  <select id="freshEmpTsAttdAsgnRecordUpdate" parameterType="java.util.HashMap" statementType="CALLABLE">
+		{call freshEmpTsAttdAsgnRecordUpdate(#{tsAssgnId, mode=IN, jdbcType=BIGINT}, #{msg, mode=OUT, jdbcType=VARCHAR})}
+  </select>
+  <select id="freshEmpTsAttdAsgnRecordByEmp" parameterType="java.util.HashMap" statementType="CALLABLE">
+		{call freshEmpTsAttdAsgnRecordByEmp(#{tsAssgnId, mode=IN, jdbcType=BIGINT},#{employeeId, mode=IN, jdbcType=BIGINT}, #{msg, mode=OUT, jdbcType=VARCHAR})}
+  </select>
+  <update id="clearEmpTsAttdAsgnRecords">
+    update emp_ts_attd_asgn_record taar
+	left join timesheet_assignment_detail tad on taar.employee_num = tad.employee_num
+	and taar.ts_date = tad.ts_date
+	set taar.assign_type = 0, taar.assign_project_id = NULL, taar.assigned_status = 0
+	where tad.if_issue = 1 and taar.source = 0 and taar.need_assign = 1 
+	and tad.ts_asgn_dtl_id in
+    <foreach collection="dtlIds" item="id" index="index" open="(" close=")" separator="," >
+      #{id} 
+    </foreach>
+  </update>
+  <select id="findEmpTsAttdAsgnRecord" parameterType="com.vendetech.project.tsms.domain.EmpTsAttdAsgnRecord" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from emp_ts_attd_asgn_record
+    where 1=1
+      <if test="employeeId != null">
+        and employee_id = #{employeeId,jdbcType=BIGINT} 
+      </if>
+      <if test="employeeNum != null">
+        and employee_num = #{employeeNum,jdbcType=VARCHAR} 
+      </if>
+      <if test="employeeName != null">
+        and employee_name = #{employeeName,jdbcType=VARCHAR} 
+      </if>
+      <if test="tsDate != null">
+        and ts_date = #{tsDate,jdbcType=DATE} 
+      </if>
+      <if test="assignType != null">
+        and assign_type = #{assignType,jdbcType=INTEGER}
+      </if>
+  </select>
+  <select id="countStaff" parameterType="java.lang.String" resultType="java.lang.Integer">
+  SELECT COUNT(DISTINCT(emp.employee_id)) FROM employee emp, employee_department ed 
+   WHERE emp.employee_id = ed.employee_id 
+      <if test="depts != null">
+     AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR} ))
+      </if>
+     And emp.status = 1 
+  </select>
+
+  <update id="batchUpdateLastWorkDate" parameterType="java.util.List" > <!--  case when 更新，更效率 -->
+	UPDATE employee
+     SET exit_date = 
+    <foreach collection="list" item="item" index="index"
+             separator=" " open="case dd_userid" close="end">
+        when #{item.userid} then FROM_UNIXTIME(#{item.lastWorkDay }/1000,'%Y-%m-%d %h:%i:%s')
+    </foreach>
+    where dd_userid in (
+    <foreach collection="list" item="item" index="index"
+             separator=",">
+        #{item.userid}
+    </foreach>
+    )
+       <!-- <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+          UPDATE employee
+             SET exit_date = FROM_UNIXTIME(#{item.lastWorkDay }/1000,'%Y-%m-%d %h:%i:%s')
+           WHERE dd_userid = #{item.userid }
+       </foreach> -->
+  </update>
+  <select id="getRealtimeAnalysisReport" parameterType="java.util.HashMap" resultMap="ReportRecordMap">
+    select 
+    r.employee_id, r.employee_num, r.employee_name, 
+    e.company_name employee_company,
+    md.department_name as employee_department_name,
+    md.department_num as employee_department_num, 
+    case assign_type 
+    when 1 then '项目中'
+    when 2 then '培训'
+    when 3 then '闲置'
+    else ''
+    end as assign_type,
+    case assign_type 
+    when 1 then p.project_name
+    when 2 then p.project_name
+    when 3 then '闲置'
+    else ''
+    end as assign_project_name,
+    assign_project_id, 
+    project_num as assign_project_num, 
+    c.company_name as project_company, 
+    pd.department_name as project_department_name, 
+    pd.department_num as project_department_num, 
+    case p.contract_status 
+    when 0 then '待签'
+    when 1 then '已签'
+    else ''
+    end as contract_status,
+    ifnull(sum(attendance_day_hours), 0) as input_hours,
+    concat(year(ts_date),'-',if(month(ts_date) <![CDATA[<]]> 10,concat('0',month(ts_date)),month(ts_date))) as ts_month,
+    emih.total_input_hours,
+    emah.total_assign_hours,
+    concat(ROUND(sum(attendance_day_hours) / total_assign_hours * 100 , 2),'%') proportion,
+    if(e.company_name = c.company_name,'','是') as company_diff,
+    if(md.department_num = pd.department_num,'','是') as department_diff,
+    ifnull(assigner, '') as assigner, 
+    ifnull(ea.employee_name, '') as assigner_name
+    from emp_ts_attd_asgn_record r
+    left join project p on p.project_id = r.assign_project_id
+    left join employee e on e.employee_id = r.employee_id 
+    left join employee ea on ea.employee_num = r.assigner 
+    left join company c on c.company_id = p.project_company_id 
+    left join department md on md.department_id = e.main_dept_id
+    left join department pd on pd.department_id = p.project_department_id
+    left join emp_monthly_input_hours_view emih on emih.employee_num = r.employee_num and emih.ts_year = year(ts_date) and emih.ts_month = month(ts_date)
+    left join emp_monthly_assign_hours_view emah on emah.employee_num = r.employee_num and emah.ts_year = year(ts_date) and emah.ts_month = month(ts_date)
+    where 1=1 
+      <if test="ddDptId != null">
+    and r.employee_id in (SELECT DISTINCT(emp.employee_id) FROM employee emp, employee_department ed WHERE
+        emp.employee_id = ed.employee_id AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, getChildrenDepartment (#{ddDptId,jdbcType=VARCHAR}))) )
+      </if>
+      <if test="depts != null">
+    and r.employee_id in (SELECT ed.employee_id FROM employee_department ed WHERE 1 = 1
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+    )
+      </if>
+    and need_assign = 1 and assigned_status = 1 and r.if_issue = 0
+    and date(ts_date) between #{fromDate,jdbcType=VARCHAR} and #{toDate,jdbcType=VARCHAR}
+      <if test="projectId != null">
+      and assign_project_id = #{projectId,jdbcType=BIGINT} 
+      </if>
+      <if test="empKeyword != null">
+      and (e.employee_num like concat('%', #{empKeyword}, '%') or e.employee_name like concat('%', #{empKeyword}, '%')) 
+      </if>
+      <if test="companyId != null">
+      and e.company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      <if test="projectCompanyId != null">
+      and p.project_company_id = #{projectCompanyId,jdbcType=BIGINT}
+      </if>
+      <if test="ddPrjDptId != null">
+      and pd.dd_department_id = #{ddPrjDptId,jdbcType=VARCHAR}
+      </if>
+    group by r.employee_num, r.employee_id, r.employee_name, assign_type, assign_project_id, ts_month
+  </select>
+  <select id="getHistoryFinanceReport" parameterType="java.util.HashMap" resultMap="ReportRecordMap">
+    select 
+    r.employee_id, r.employee_num, r.employee_name, 
+    e.company_name employee_company,
+    md.department_name as employee_department_name,
+    md.department_num as employee_department_num, 
+    case assign_type 
+    when 1 then '项目中'
+    when 2 then '培训'
+    when 3 then '闲置'
+    else ''
+    end as assign_type,
+    case assign_type 
+    when 1 then p.project_name
+    when 2 then p.project_name
+    when 3 then '闲置'
+    else ''
+    end as assign_project_name,
+    assign_project_id, 
+    project_num as assign_project_num, 
+    c.company_name as project_company, 
+    pd.department_name as project_department_name, 
+    pd.department_num as project_department_num, 
+    case p.contract_status 
+    when 0 then '待签'
+    when 1 then '已签'
+    else ''
+    end as contract_status,
+    ifnull(sum(attendance_day_hours), 0) as input_hours,
+    concat(year(ts_date),'-',if(month(ts_date) <![CDATA[<]]> 10,concat('0',month(ts_date)),month(ts_date))) as ts_month,
+    emih.total_input_hours,
+    concat(ROUND(sum(attendance_day_hours) / total_input_hours * 100 , 2),'%') proportion,
+    if(e.company_name = c.company_name,'','是') as company_diff,
+    if(md.department_num = pd.department_num,'','是') as department_diff,
+    ifnull(assigner, '') as assigner, 
+    ifnull(ea.employee_name, '') as assigner_name
+    from emp_ts_attd_asgn_record_history r
+    left join project_history p on p.project_id = r.assign_project_id and p.year_month = concat(year(ts_date),if(month(ts_date)<![CDATA[<]]>10,concat('0',month(ts_date)),month(ts_date)))
+    left join employee e on e.employee_id = r.employee_id 
+    left join employee ea on ea.employee_num = r.assigner 
+    left join company c on c.company_id = p.project_company_id 
+    left join department md on md.department_id = e.main_dept_id
+    left join department pd on pd.department_id = p.project_department_id
+    left join emp_monthly_input_hours_history_view emih on emih.employee_num = r.employee_num and emih.ts_year = year(ts_date) and emih.ts_month = month(ts_date)
+    where 1=1 
+      <if test="ddDptId != null">
+    and r.employee_id in (SELECT DISTINCT(emp.employee_id) FROM employee emp, employee_department_history ed WHERE
+        emp.employee_id = ed.employee_id AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, getChildrenDepartment (#{ddDptId,jdbcType=VARCHAR}))) )
+      </if>
+      <if test="depts != null">
+    and r.employee_id in (SELECT ed.employee_id FROM employee_department_history ed WHERE 1 = 1
+          AND ed.department_id IN (SELECT department_id FROM department WHERE
+            FIND_IN_SET(department_id, #{depts,jdbcType=VARCHAR})) 
+    )
+      </if>
+    and need_assign = 1 and assigned_status = 1 and r.if_issue = 0
+    and concat(year(ts_date),'-',if(month(ts_date)<![CDATA[<]]>10,concat('0',month(ts_date)),month(ts_date))) <![CDATA[>=]]> #{fromMonth,jdbcType=VARCHAR} 
+    and concat(year(ts_date),'-',if(month(ts_date)<![CDATA[<]]>10,concat('0',month(ts_date)),month(ts_date))) <![CDATA[<=]]> #{toMonth,jdbcType=VARCHAR} 
+      <if test="projectId != null">
+      and assign_project_id = #{projectId,jdbcType=BIGINT} 
+      </if>
+      <if test="empKeyword != null">
+      and (e.employee_num like concat('%', #{empKeyword}, '%') or e.employee_name like concat('%', #{empKeyword}, '%')) 
+      </if>
+      <if test="companyId != null">
+      and e.company_id = #{companyId,jdbcType=BIGINT}
+      </if>
+      <if test="projectCompanyId != null">
+      and p.project_company_id = #{projectCompanyId,jdbcType=BIGINT}
+      </if>
+      <if test="ddPrjDptId != null">
+      and pd.dd_department_id = #{ddPrjDptId,jdbcType=VARCHAR}
+      </if>
+    group by r.employee_num, r.employee_id, r.employee_name, assign_type, assign_project_id, ts_month
+  </select>
+</mapper>

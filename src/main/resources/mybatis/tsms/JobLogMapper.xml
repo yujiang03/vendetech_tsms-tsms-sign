@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.mapper.JobLogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.vendetech.project.tsms.domain.JobLog">
+		<id column="job_log_id" jdbcType="BIGINT" property="jobLogId" />
+		<result column="job_name" jdbcType="VARCHAR" property="jobName" />
+		<result column="job_status" jdbcType="INTEGER"
+			property="jobStatus" />
+		<result column="job_msg" jdbcType="VARCHAR"
+			property="jobMsg" />
+		<result column="job_start_time" jdbcType="TIMESTAMP"
+			property="jobStartTime" />
+		<result column="job_end_time" jdbcType="TIMESTAMP"
+			property="jobEndTime" />
+		<result column="job_date" jdbcType="DATE" property="jobDate" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		job_log_id, job_name, job_status, job_msg, job_start_time, job_end_time, job_date
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from job_log
+		where job_log_id = #{jobLogId,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from job_log
+		where job_log_id = #{jobLogId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vendetech.project.tsms.domain.JobLog" useGeneratedKeys="true" keyProperty="jobLogId">
+		insert into job_log (job_log_id, job_name, job_status, job_msg,
+		job_start_time, job_end_time, job_date
+		)
+		values (#{jobLogId,jdbcType=BIGINT}, #{jobName,jdbcType=VARCHAR},
+		#{jobStatus,jdbcType=INTEGER}, #{jobMsg,jdbcType=VARCHAR},
+		#{jobStartTime,jdbcType=TIMESTAMP}, #{jobEndTime,jdbcType=TIMESTAMP}, #{jobDate,jdbcType=DATE}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vendetech.project.tsms.domain.JobLog" useGeneratedKeys="true" keyProperty="jobLogId">
+		insert into job_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jobLogId != null">
+				job_log_id,
+			</if>
+			<if test="jobName != null">
+				job_name,
+			</if>
+			<if test="jobStatus != null">
+				job_status,
+			</if>
+			<if test="jobMsg != null">
+				job_msg,
+			</if>
+			job_start_time,
+			<if test="jobEndTime != null">
+				job_end_time,
+			</if>
+			<if test="jobDate != null">
+				job_date,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="jobLogId != null">
+				#{jobLogId,jdbcType=BIGINT},
+			</if>
+			<if test="jobName != null">
+				#{jobName,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStatus != null">
+				#{jobStatus,jdbcType=INTEGER},
+			</if>
+			<if test="jobMsg != null">
+				#{jobMsg,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStartTime != null">
+				#{jobStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jobStartTime == null">
+				sysdate(),
+			</if>
+			<if test="jobEndTime != null">
+				#{jobEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jobDate != null">
+				#{jobDate,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vendetech.project.tsms.domain.JobLog">
+		update job_log
+		<set>
+			<if test="jobName != null">
+				job_name = #{jobName,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStatus != null">
+				job_status = #{jobStatus,jdbcType=INTEGER},
+			</if>
+			<if test="jobMsg != null">
+				job_msg = #{jobMsg,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStartTime != null">
+				job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jobEndTime != null">
+				job_end_time = #{jobEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="jobDate != null">
+				job_date = #{jobDate,jdbcType=DATE},
+			</if>
+		</set>
+		where job_log_id = #{jobLogId,jdbcType=BIGINT}
+	</update>
+	<update id="finishByPrimaryKeySelective"
+		parameterType="com.vendetech.project.tsms.domain.JobLog">
+		update job_log
+		<set>
+			<if test="jobName != null">
+				job_name = #{jobName,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStatus != null">
+				job_status = #{jobStatus,jdbcType=INTEGER},
+			</if>
+			<if test="jobMsg != null">
+				job_msg = #{jobMsg,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStartTime != null">
+				job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
+			</if>
+				job_end_time = sysdate(),
+			<if test="jobDate != null">
+				job_date = #{jobDate,jdbcType=DATE},
+			</if>
+		</set>
+		where job_log_id = #{jobLogId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vendetech.project.tsms.domain.JobLog">
+		update job_log
+		set job_name = #{jobName,jdbcType=VARCHAR},
+		job_status = #{jobStatus,jdbcType=INTEGER},
+		job_msg = #{jobMsg,jdbcType=VARCHAR},
+		job_start_time = #{jobStartTime,jdbcType=TIMESTAMP},
+		job_end_time = #{jobEndTime,jdbcType=TIMESTAMP},
+		job_date = #{jobDate,jdbcType=DATE}
+		where job_log_id = #{jobLogId,jdbcType=BIGINT}
+	</update>
+	<select id="getLatestJobLog" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from job_log
+		where job_status = 1 and job_name = #{jobName,jdbcType=BIGINT}
+		order by job_end_time desc limit 1
+	</select>
+</mapper>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.project.mapper.DepartmentMapper">
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.Department">
+    <id column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="department_num" jdbcType="VARCHAR" property="departmentNum" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="dd_department_id" jdbcType="VARCHAR" property="ddDepartmentId" />
+    <result column="manager_num" jdbcType="VARCHAR" property="managerNum" />
+    <result column="parent_department_id" jdbcType="VARCHAR" property="parentDepartmentId" />
+    <result column="bu_num" jdbcType="VARCHAR" property="buNum" />
+    <result column="bu_name" jdbcType="VARCHAR" property="buName" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    department_id, department_num, department_name, dd_department_id, manager_num, parent_department_id, 
+    bu_num, bu_name, status, create_time, modify_time
+  </sql>
+  <select id="getDepartMentId" parameterType="java.lang.String" resultType="com.vendetech.project.tsms.domain.Department">
+    SELECT
+       department_id as departmentId
+    FROM
+    department
+    WHERE
+    department_num = #{departmentNum}
+  </select>
+  <select id="getDepartMentNameList" resultMap="BaseResultMap">
+    select department_id,department_name,department_num from department
+  </select>
+  <select id="getByemployeeName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+        dt.department_id
+    FROM
+        department dt,
+        employee e,
+        employee_department ed
+    WHERE
+        dt.department_id = ed.department_id
+    AND  e.employee_id = ed.employee_id
+    AND  e.employee_name = #{employeeName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where department_id = #{departmentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from department
+    where department_id = #{departmentId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.vendetech.project.tsms.domain.Department">
+    insert into department (department_id, department_num, department_name, dd_department_id, 
+      manager_num, parent_department_id, bu_num, 
+      bu_name, status, create_time, 
+      modify_time)
+    values (#{departmentId,jdbcType=BIGINT}, #{departmentNum,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{ddDepartmentId,jdbcType=VARCHAR}, 
+      #{managerNum,jdbcType=VARCHAR}, #{parentDepartmentId,jdbcType=VARCHAR}, #{buNum,jdbcType=VARCHAR}, 
+      #{buName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.Department">
+    insert into department
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="departmentNum != null">
+        department_num,
+      </if>
+      <if test="departmentName != null">
+        department_name,
+      </if>
+      <if test="managerNum != null">
+        manager_num,
+      </if>
+      <if test="parentDepartmentId != null">
+        parent_department_id,
+      </if>
+      <if test="buNum != null">
+        bu_num,
+      </if>
+      <if test="buName != null">
+        bu_name,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentNum != null">
+        #{departmentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="managerNum != null">
+        #{managerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDepartmentId != null">
+        #{parentDepartmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="buNum != null">
+        #{buNum,jdbcType=VARCHAR},
+      </if>
+      <if test="buName != null">
+        #{buName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.project.tsms.domain.Department">
+    update department
+    <set>
+      <if test="departmentNum != null">
+        department_num = #{departmentNum,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="managerNum != null">
+        manager_num = #{managerNum,jdbcType=VARCHAR},
+      </if>
+      <if test="parentDepartmentId != null">
+        parent_department_id = #{parentDepartmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="buNum != null">
+        bu_num = #{buNum,jdbcType=VARCHAR},
+      </if>
+      <if test="buName != null">
+        bu_name = #{buName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where department_id = #{departmentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vendetech.project.tsms.domain.Department">
+    update department
+    set department_num = #{departmentNum,jdbcType=VARCHAR},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      manager_num = #{managerNum,jdbcType=VARCHAR},
+      parent_department_id = #{parentDepartmentId,jdbcType=VARCHAR},
+      bu_num = #{buNum,jdbcType=VARCHAR},
+      bu_name = #{buName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where department_id = #{departmentId,jdbcType=BIGINT}
+  </update>
+  <select id ="getMgrDepartments" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where manager_num = #{mgrNum,jdbcType=VARCHAR}
+  </select>
+  <select id ="getLctdDepartments" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where department_id in (select department_id from employee_department ed left join employee e on e.employee_id = ed.employee_id
+    where e.employee_num = #{mgrNum,jdbcType=VARCHAR})
+  </select>
+  <select id="getChildrenDeparments" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where FIND_IN_SET(department_id, getChildrenDepartment(#{ddDepartmentId,jdbcType=VARCHAR})); 
+  </select>
+  <select id="getEmpMainBuDepartment" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from department
+    where FIND_IN_SET(department_id, getParentDepartment(#{mainDdDepartmentId,jdbcType=VARCHAR}))
+    and parent_department_id = 1;
+  </select>
+  <select id="getChildrenDepts" parameterType="java.lang.String" resultType="java.lang.String">
+    select getChildrenDepartment(#{mainDdDepartmentId,jdbcType=VARCHAR});
+  </select>
+  <select id ="getMgrdDepartments" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select department_id, department_num, department_name, dd_department_id, manager_num, parent_department_id, bu_num, bu_name
+    from department d
+    where FIND_IN_SET(#{mgrNum,jdbcType=VARCHAR}, manager_num)
+  </select>
+  
+</mapper>

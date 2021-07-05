@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.timesheetAssignment.mapper.TimesheetAssignmentDetailMapper">
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail">
+    <id column="ts_asgn_dtl_id" jdbcType="BIGINT" property="tsAsgnDtlId" />
+    <result column="ts_asgn_id" jdbcType="BIGINT" property="tsAsgnId" />
+    <result column="employee_id" jdbcType="BIGINT" property="employeeId" />
+    <result column="employee_num" jdbcType="VARCHAR" property="employeeNum" />
+    <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+    <result column="assign_type" jdbcType="INTEGER" property="assignType" />
+    <result column="ts_date" jdbcType="DATE" property="tsDate" />
+    <result column="detail_status" jdbcType="INTEGER" property="detailStatus" />
+    <result column="attendance_result" jdbcType="VARCHAR" property="attendanceResult" />
+    <result column="if_issue" jdbcType="INTEGER" property="ifIssue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="project_id"   property="projectId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ts_asgn_dtl_id, ts_asgn_id, employee_id, employee_num, employee_name, assign_type,
+    ts_date, detail_status, attendance_result, if_issue, create_time, modify_time
+  </sql>
+  <select id="getAssignmentName" parameterType="com.vendetech.project.tsms.timesheetAssignment.controller.DTO.EmployeeDTO" resultType="com.vendetech.project.tsms.timesheetAssignment.controller.DTO.AssignmentNameDTO">
+    select * from(SELECT DISTINCT
+    * from (
+    SELECT
+    tt.ts_asgn_id as tsAsgnId,
+    tt.ts_created_by,
+    tt.ts_project_id,
+    CONCAT(
+    pt.project_name,'_',
+    REPLACE (tt.ts_start_date, "-", ''),'-',
+    REPLACE (tt.ts_end_date, '-', '')
+    ) AS assignmentName
+    FROM
+    timesheet_assignment tt left JOIN project pt on
+    tt.ts_project_id = pt.project_id
+    where tt.ts_project_id is not null
+    ) as a
+    UNION
+    SELECT DISTINCT
+    * from (
+    SELECT
+    tt.ts_asgn_id as tsAsgnId,
+    tt.ts_created_by,
+    tt.ts_project_id,
+    CONCAT(
+    CASE assign_type
+    WHEN '1' THEN
+    '项目中'
+    WHEN '2' THEN
+    '培训'
+    WHEN '3' THEN
+    '闲置'
+    END,
+    '_',
+    REPLACE (ts_start_date, "-", ''),
+    '-',
+    REPLACE (ts_end_date, '-', '')
+    ) AS assignmentName
+    FROM
+    timesheet_assignment tt left JOIN project pt on
+    tt.ts_project_id = pt.project_id
+    where tt.ts_project_id is null
+    ) as a
+    ) as a
+    <where>
+      <if test="assignmentName != null and assignmentName != ''">
+        a.assignmentName like concat('%', #{assignmentName}, '%')
+      </if>
+      and a.ts_created_by = #{projectManager}
+    </where>
+  </select>
+  <select id="getByTsAsgnId" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT
+        DISTINCT
+        employee_id employeeId,
+        employee_name employeeName,
+        employee_num employeeNum
+    FROM
+        timesheet_assignment_detail
+    WHERE
+        employee_num is not null
+         and ts_asgn_id = #{tsAsgnId}
+         and if_issue != 1
+  </select>
+  <select id="selectByTsAsgnId" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT * from (SELECT
+    tad.ts_asgn_dtl_id,
+    tad.ts_asgn_id,
+    tad.employee_num,
+    tad.employee_name,
+    tad.ts_date,
+    (
+    SELECT
+    company_name
+    FROM
+    employee ey
+    WHERE
+    tad.employee_id = ey.employee_id
+    ) companyName,
+    pt.project_num,
+    pt.project_id,
+    CASE tad.assign_type
+    WHEN '1' THEN
+    '项目中'
+    WHEN '2' THEN
+    '培训'
+    WHEN '3' THEN
+    '闲置'
+    END AS assignType,
+    pt.project_name,
+    tad.assign_type,
+    dt.department_num,
+    dt.department_name,
+    CONCAT(
+    pt.project_name,'_',
+    REPLACE (tt.ts_start_date, "-", ''),'-',
+    REPLACE (tt.ts_end_date, '-', '')
+    ) AS assignmentName,
+    (SELECT company_name from company cy where cy.company_id = pt.project_company_id) projectCompanyName
+    FROM
+    timesheet_assignment tt
+    LEFT JOIN timesheet_assignment_detail tad ON tt.ts_asgn_id = tad.ts_asgn_id
+    LEFT JOIN project pt ON tad.project_id = pt.project_id
+    LEFT JOIN department dt ON dt.department_id = tt.ts_deparment_id
+    where
+      tad.ts_asgn_id = #{tsAsgnId}
+      and tad.if_issue != 1
+    ) as a
+    <where>
+      <if test="assignType != null and assignType != ''">
+        a.assignType like concat('%', #{assignType}, '%')
+      </if>
+      <if test="keyword != null and keyword != ''">
+        and (a.department_name like concat('%', #{keyword}, '%')
+        or a.employee_num like concat('%', #{keyword}, '%')
+        or a.employee_name like  concat('%', #{keyword}, '%')
+        )
+      </if>
+    </where>
+    ORDER BY
+    a.ts_asgn_dtl_id ASC
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from timesheet_assignment_detail
+    where ts_asgn_dtl_id = #{tsAsgnDtlId,jdbcType=BIGINT}
+  </select>
+   <select id="selectByTsDate" parameterType="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail" resultMap="BaseResultMap">
+        select * from timesheet_assignment_detail where ts_date = #{tsDate} and employee_id = #{employeeId}
+   </select>
+    <update id="updateByTsDate" parameterType="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail">
+        update timesheet_assignment_detail set if_issue = 1 , modify_time = sysdate() where ts_asgn_dtl_id = #{tsAsgnDtlId,jdbcType=BIGINT}
+    </update>
+  <update id="batchUpdateByTsDate" parameterType="java.util.HashMap">
+        update timesheet_assignment_detail
+		   set if_issue = 1, 
+		       modify_time = sysdate()
+		 where ts_date = #{tsDate}
+		   and employee_id = #{employeeId}
+		   and if_issue = 0
+  </update>  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from timesheet_assignment_detail
+    where ts_asgn_dtl_id = #{tsAsgnDtlId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertTimeSheetDetail" parameterType="java.util.HashMap"  >
+    insert into timesheet_assignment_detail
+	  (ts_asgn_id,
+	   employee_id,
+	   employee_num,
+	   employee_name,
+	   assign_type,
+	   ts_date,
+	   detail_status,
+	   attendance_result,
+	   if_issue,
+	   create_time,
+	   project_id)
+	values
+	  (#{tsAsgnId},
+	   #{employeeId},
+	   #{employeeNum},
+	   #{employeeName},
+	   #{assignType},
+	   #{tsDate},
+	   #{detailStatus},
+	   #{attendanceResult},
+	   0,
+	   sysdate(),
+	   #{tsProjectId})
+  </insert>
+  
+  <insert id="insert" parameterType="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail"  >
+    insert into timesheet_assignment_detail (ts_asgn_id, employee_id,
+      employee_num, employee_name, assign_type,
+      ts_date, detail_status, attendance_result,
+      if_issue, create_time, modify_time,project_id
+      )
+    values (#{tsAsgnId,jdbcType=BIGINT}, #{employeeId,jdbcType=BIGINT},
+      #{employeeNum,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, #{assignType,jdbcType=INTEGER},
+     #{tsDate}, #{detailStatus,jdbcType=INTEGER}, #{attendanceResult,jdbcType=VARCHAR},
+      #{ifIssue,jdbcType=INTEGER}, sysdate(), #{modifyTime,jdbcType=TIMESTAMP},#{projectId}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail">
+    insert into timesheet_assignment_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tsAsgnDtlId != null">
+        ts_asgn_dtl_id,
+      </if>
+      <if test="tsAsgnId != null">
+        ts_asgn_id,
+      </if>
+      <if test="employeeId != null">
+        employee_id,
+      </if>
+      <if test="employeeNum != null">
+        employee_num,
+      </if>
+      <if test="employeeName != null">
+        employee_name,
+      </if>
+      <if test="assignType != null">
+        assign_type,
+      </if>
+      <if test="tsDate != null">
+        ts_date,
+      </if>
+      <if test="detailStatus != null">
+        detail_status,
+      </if>
+      <if test="attendanceResult != null">
+        attendance_result,
+      </if>
+      <if test="ifIssue != null">
+        if_issue,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tsAsgnDtlId != null">
+        #{tsAsgnDtlId,jdbcType=BIGINT},
+      </if>
+      <if test="tsAsgnId != null">
+        #{tsAsgnId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeNum != null">
+        #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null">
+        #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="assignType != null">
+        #{assignType,jdbcType=INTEGER},
+      </if>
+      <if test="tsDate != null">
+        #{tsDate,jdbcType=DATE},
+      </if>
+      <if test="detailStatus != null">
+        #{detailStatus,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceResult != null">
+        #{attendanceResult,jdbcType=VARCHAR},
+      </if>
+      <if test="ifIssue != null">
+        #{ifIssue,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail">
+    update timesheet_assignment_detail
+    <set>
+      <if test="tsAsgnId != null">
+        ts_asgn_id = #{tsAsgnId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeId != null">
+        employee_id = #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeNum != null">
+        employee_num = #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null">
+        employee_name = #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="assignType != null">
+        assign_type = #{assignType,jdbcType=INTEGER},
+      </if>
+      <if test="tsDate != null">
+        ts_date = #{tsDate,jdbcType=DATE},
+      </if>
+      <if test="detailStatus != null">
+        detail_status = #{detailStatus,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceResult != null">
+        attendance_result = #{attendanceResult,jdbcType=VARCHAR},
+      </if>
+      <if test="ifIssue != null">
+        if_issue = #{ifIssue,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ts_asgn_dtl_id = #{tsAsgnDtlId,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail">
+    update timesheet_assignment_detail
+    set
+     assign_type = #{assignType,jdbcType=INTEGER},
+     project_id = #{projectId},
+     modify_time = sysdate()
+    where ts_asgn_dtl_id = #{tsAsgnDtlId}
+  </update>
+
+  <update id="disableTimesheetAssignmentDetail">
+    update timesheet_assignment_detail 
+    set if_issue = 1 where ts_asgn_dtl_id in
+    <foreach collection="id" item="id" index="index" open="(" close=")" separator="," >
+      (#{id})
+    </foreach>
+  </update>
+  <delete id="deleteTimesheetAssignmentDetail">
+    delete from timesheet_assignment_detail where ts_asgn_dtl_id in
+    <foreach collection="id" item="id" index="index" open="(" close=")" separator="," >
+      (#{id})
+    </foreach>
+  </delete>
+  <update id="updateStatusByProjectId" parameterType="com.vendetech.project.tsms.domain.TimesheetAssignmentDetail">
+    update timesheet_assignment_detail  set  if_issue = #{ifIssue,jdbcType=INTEGER}
+  </update>
+</mapper>

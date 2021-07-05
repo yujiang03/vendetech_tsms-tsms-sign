@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.user.mapper.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.Employee">
+    <id column="employee_id" jdbcType="BIGINT" property="employeeId" />
+    <result column="employee_num" jdbcType="VARCHAR" property="employeeNum" />
+    <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+    <result column="dd_userid" jdbcType="VARCHAR" property="ddUserid" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="avatar" jdbcType="VARCHAR"  property="avatar"/>
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="entry_date" property="entryDate" jdbcType="DATE" />
+    <result column="exit_date" property="exitDate" jdbcType="DATE" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId"/>
+    <result column="main_dept_id" jdbcType="BIGINT" property="mainDeptId"/>
+    <result column="ts_excl_flag" jdbcType="INTEGER" property="tsExclFlag"/>
+    <result column="sex" jdbcType="VARCHAR" property="sex"/>
+    <result column="card_type" property="cardType" jdbcType="INTEGER" />
+    <result column="card_num" property="cardNum" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_card" property="bankCard" jdbcType="VARCHAR" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="auth_status" property="authStatus" jdbcType="INTEGER" />
+    <result column="auth_date" property="authDate" jdbcType="TIMESTAMP" />
+    <result column="status_desc" property="statusDesc" jdbcType="VARCHAR" />
+    <result column="cert_status" property="certStatus" jdbcType="INTEGER" />
+    <result column="verify_url" property="verifyUrl" jdbcType="VARCHAR" />
+    <result column="transaction_no" property="transactionNo" jdbcType="VARCHAR" />
+    <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    employee_id, employee_num, employee_name, dd_userid, company_id, company_name, avatar, status, entry_date, exit_date,
+    main_dept_id, ts_excl_flag, sex, card_type, card_num, mobile, bank_name, bank_card, customer_id, auth_status,
+    auth_date, status_desc, cert_status, verify_url, transaction_no, serial_no, create_time, modify_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where employee_id = #{employeeId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByEmpNum" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where employee_num = #{employeeNum,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByEmployeeName" parameterType="java.lang.String"  resultMap="BaseResultMap">
+    SELECT
+    e.employee_num,
+    e.employee_name,
+    e.employee_id,
+    e.status,
+    e.avatar,
+    ed.department_id 
+    FROM
+    employee e left join employee_department ed on e.employee_id = ed.employee_id
+    <where>
+      <if test="employeeName != null and employeeName != ''">
+       e.employee_name like concat('%', #{employeeName}, '%')
+      </if>
+      and employee_num is not null
+    </where>
+  </select>
+  <select id="getOneByEmployeeName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+        employee_id,
+        employee_name,
+        employee_num
+    FROM
+        employee
+    WHERE
+	employee_num = #{employeeNum}
+  </select>
+  <select id="getOneByEmployeeNum" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+        employee_id,
+        employee_name,
+        employee_num
+    FROM
+        employee
+    WHERE
+	employee_num = #{employeeNum}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from employee
+    where employee_id = #{employeeId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.vendetech.project.tsms.domain.Employee">
+    insert into employee (employee_id, employee_num, employee_name, 
+      dd_userid, company_id, company_name, 
+      status, create_time, modify_time,avatar
+      )
+    values (#{employeeId,jdbcType=BIGINT}, #{employeeNum,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, 
+      #{ddUserid,jdbcType=VARCHAR}, #{companyId,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},#{avatar}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.Employee">
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="employeeId != null" >
+        employee_id,
+      </if>
+      <if test="employeeNum != null" >
+        employee_num,
+      </if>
+      <if test="employeeName != null" >
+        employee_name,
+      </if>
+      <if test="ddUserid != null" >
+        dd_userid,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="companyName != null" >
+        company_name,
+      </if>
+      <if test="avatar != null" >
+        avatar,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="entryDate != null" >
+        entry_date,
+      </if>
+      <if test="exitDate != null" >
+        exit_date,
+      </if>
+      <if test="mainDeptId != null" >
+        main_dept_id,
+      </if>
+      <if test="tsExclFlag != null" >
+        ts_excl_flag,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="cardType != null" >
+        card_type,
+      </if>
+      <if test="cardNum != null" >
+        card_num,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankCard != null" >
+        bank_card,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="authStatus != null" >
+        auth_status,
+      </if>
+      <if test="authDate != null" >
+        auth_date,
+      </if>
+      <if test="statusDesc != null" >
+        status_desc,
+      </if>
+      <if test="certStatus != null" >
+        cert_status,
+      </if>
+      <if test="verifyUrl != null" >
+        verify_url,
+      </if>
+      <if test="transactionNo != null" >
+        transaction_no,
+      </if>
+      <if test="serialNo != null" >
+        serial_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="employeeId != null" >
+        #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeNum != null" >
+        #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null" >
+        #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="ddUserid != null" >
+        #{ddUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="entryDate != null" >
+        #{entryDate,jdbcType=DATE},
+      </if>
+      <if test="exitDate != null" >
+        #{exitDate,jdbcType=DATE},
+      </if>
+      <if test="mainDeptId != null" >
+        #{mainDeptId,jdbcType=BIGINT},
+      </if>
+      <if test="tsExclFlag != null" >
+        #{tsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="cardType != null" >
+        #{cardType,jdbcType=INTEGER},
+      </if>
+      <if test="cardNum != null" >
+        #{cardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="authStatus != null" >
+        #{authStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authDate != null" >
+        #{authDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDesc != null" >
+        #{statusDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="certStatus != null" >
+        #{certStatus,jdbcType=INTEGER},
+      </if>
+      <if test="verifyUrl != null" >
+        #{verifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionNo != null" >
+        #{transactionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.project.tsms.domain.Employee">
+    update employee
+    <set >
+      <if test="employeeNum != null" >
+        employee_num = #{employeeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null" >
+        employee_name = #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="ddUserid != null" >
+        dd_userid = #{ddUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="companyName != null" >
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="entryDate != null" >
+        entry_date = #{entryDate,jdbcType=DATE},
+      </if>
+      <if test="exitDate != null" >
+        exit_date = #{exitDate,jdbcType=DATE},
+      </if>
+      <if test="mainDeptId != null" >
+        main_dept_id = #{mainDeptId,jdbcType=BIGINT},
+      </if>
+      <if test="tsExclFlag != null" >
+        ts_excl_flag = #{tsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="cardType != null" >
+        card_type = #{cardType,jdbcType=INTEGER},
+      </if>
+      <if test="cardNum != null" >
+        card_num = #{cardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCard != null" >
+        bank_card = #{bankCard,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        customer_id = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="authStatus != null" >
+        auth_status = #{authStatus,jdbcType=INTEGER},
+      </if>
+      <if test="authDate != null" >
+        auth_date = #{authDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="statusDesc != null" >
+        status_desc = #{statusDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="certStatus != null" >
+        cert_status = #{certStatus,jdbcType=INTEGER},
+      </if>
+      <if test="verifyUrl != null" >
+        verify_url = #{verifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionNo != null" >
+        transaction_no = #{transactionNo,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        serial_no = #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where employee_id = #{employeeId,jdbcType=BIGINT}
+  </update>
+
+  <select id="getMgrEmployees" parameterType="java.lang.String"  resultMap="BaseResultMap">
+    SELECT
+    e.employee_num,
+    e.employee_name,
+    e.employee_id,
+    e.status,
+    ed.department_id
+    FROM
+    employee e,
+    employee_department ed
+    <where>
+      e.employee_id = ed.employee_id
+      and ed.department_id in (select department_id from department where manager_num = #{mgrNum} )
+    </where>
+  </select>
+  <select id="getDepartmentEmployees" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    e.employee_num,
+    e.employee_name,
+    e.employee_id,
+    e.status,
+    ed.department_id
+    FROM
+    employee e,
+    employee_department ed
+    <where>
+      e.employee_id = ed.employee_id
+      and ed.department_id in (select department_id from department where department_num = #{dptNum} )
+    </where>
+  </select>
+  <select id="selectByEmployeeDdUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    e.employee_num,
+    e.employee_name,
+    e.employee_id,
+    e.status,
+    e.dd_userid
+    FROM
+    employee e
+    <where>
+      e.dd_userid = #{ddUserid}
+    </where>
+    limit 1
+  </select>
+  <select id="findEmployeeByNumName" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where employee_name = #{employeeName,jdbcType=VARCHAR}
+    and employee_num = #{employeeNum,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectAllEmployee" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from employee
+  </select>
+</mapper>

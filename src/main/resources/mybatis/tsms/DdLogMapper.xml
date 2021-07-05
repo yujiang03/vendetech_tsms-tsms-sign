@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.mapper.DdLogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.vendetech.project.tsms.domain.DdLog">
+		<id column="dl_id" jdbcType="BIGINT" property="dlId" />
+		<result column="post_name" jdbcType="VARCHAR"
+			property="postName" />
+		<result column="send_time" jdbcType="TIMESTAMP"
+			property="sendTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="error_code" jdbcType="VARCHAR"
+			property="errorCode" />
+		<result column="error_message" jdbcType="VARCHAR"
+			property="errorMessage" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.vendetech.project.tsms.domain.DdLog">
+		<result column="parameter" jdbcType="LONGVARCHAR"
+			property="parameter" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		dl_id, post_name, send_time, status, error_code, error_message
+	</sql>
+	<sql id="Blob_Column_List">
+		parameter
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from dd_logs
+		where dl_id = #{dlId,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from dd_logs
+		where dl_id = #{dlId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		insert into dd_logs (dl_id, post_name, send_time,
+		status, error_code, error_message,
+		parameter)
+		values (#{dlId,jdbcType=BIGINT}, #{postName,jdbcType=VARCHAR},
+		#{sendTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=INTEGER}, #{errorCode,jdbcType=VARCHAR}, #{errorMessage,jdbcType=VARCHAR},
+		#{parameter,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		insert into dd_logs
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dlId != null">
+				dl_id,
+			</if>
+			<if test="postName != null">
+				post_name,
+			</if>
+			<if test="sendTime != null">
+				send_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="errorCode != null">
+				error_code,
+			</if>
+			<if test="errorMessage != null">
+				error_message,
+			</if>
+			<if test="parameter != null">
+				parameter,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dlId != null">
+				#{dlId,jdbcType=BIGINT},
+			</if>
+			<if test="postName != null">
+				#{postName,jdbcType=VARCHAR},
+			</if>
+			<if test="sendTime != null">
+				#{sendTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="errorCode != null">
+				#{errorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="errorMessage != null">
+				#{errorMessage,jdbcType=VARCHAR},
+			</if>
+			<if test="parameter != null">
+				#{parameter,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		update dd_logs
+		<set>
+			<if test="postName != null">
+				post_name = #{postName,jdbcType=VARCHAR},
+			</if>
+			<if test="sendTime != null">
+				send_time = #{sendTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="errorCode != null">
+				error_code = #{errorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="errorMessage != null">
+				error_message = #{errorMessage,jdbcType=VARCHAR},
+			</if>
+			<if test="parameter != null">
+				parameter = #{parameter,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where dl_id = #{dlId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		update dd_logs
+		set post_name = #{postName,jdbcType=VARCHAR},
+		send_time = #{sendTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER},
+		error_code = #{errorCode,jdbcType=VARCHAR},
+		error_message = #{errorMessage,jdbcType=VARCHAR},
+		parameter = #{parameter,jdbcType=LONGVARCHAR}
+		where dl_id = #{dlId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		update dd_logs
+		set post_name = #{postName,jdbcType=VARCHAR},
+		send_time = #{sendTime,jdbcType=TIMESTAMP},
+		status = #{status,jdbcType=INTEGER},
+		error_code = #{errorCode,jdbcType=VARCHAR},
+		error_message = #{errorMessage,jdbcType=VARCHAR}
+		where dl_id = #{dlId,jdbcType=BIGINT}
+	</update>
+	<resultMap id="BaseResultMap2"
+		type="com.vendetech.project.tsms.domain.DdLog">
+		<result column="id" jdbcType="BIGINT" property="id" />
+		<result column="post_name" jdbcType="VARCHAR"
+			property="postName" />
+		<result column="parameter" jdbcType="VARCHAR"
+			property="parameter" />
+		<result column="send_time" jdbcType="TIMESTAMP"
+			property="sendTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="error_code" jdbcType="VARCHAR"
+			property="errorCode" />
+		<result column="error_message" jdbcType="VARCHAR"
+			property="errorMessage" />
+	</resultMap>
+	<insert id="insert2"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		insert into dd_logs (id, post_name, parameter,
+		send_time, status, error_code,
+		error_message)
+		values (#{id,jdbcType=BIGINT}, #{postName,jdbcType=VARCHAR},
+		#{parameter,jdbcType=VARCHAR},
+		#{sendTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{errorCode,jdbcType=VARCHAR},
+		#{errorMessage,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective2"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		insert into dd_logs
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="postName != null">
+				post_name,
+			</if>
+			<if test="parameter != null">
+				parameter,
+			</if>
+			<if test="sendTime != null">
+				send_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="errorCode != null">
+				error_code,
+			</if>
+			<if test="errorMessage != null">
+				error_message,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="postName != null">
+				#{postName,jdbcType=VARCHAR},
+			</if>
+			<if test="parameter != null">
+				#{parameter,jdbcType=VARCHAR},
+			</if>
+			<if test="sendTime != null">
+				#{sendTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="errorCode != null">
+				#{errorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="errorMessage != null">
+				#{errorMessage,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<resultMap id="BaseResultMap3"
+		type="com.vendetech.project.tsms.domain.DdLog">
+		<id column="dl_id" jdbcType="BIGINT" property="dlId" />
+		<result column="post_name" jdbcType="VARCHAR"
+			property="postName" />
+		<result column="send_time" jdbcType="TIMESTAMP"
+			property="sendTime" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="error_code" jdbcType="VARCHAR"
+			property="errorCode" />
+		<result column="error_message" jdbcType="VARCHAR"
+			property="errorMessage" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs2"
+		type="com.vendetech.project.tsms.domain.DdLog">
+		<result column="parameter" jdbcType="LONGVARCHAR"
+			property="parameter" />
+	</resultMap>
+	<sql id="Base_Column_List2">
+		dl_id, post_name, send_time, status, error_code, error_message
+	</sql>
+	<sql id="Blob_Column_List2">
+		parameter
+	</sql>
+	<select id="selectByPrimaryKey2" parameterType="java.lang.Long"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from dd_logs
+		where dl_id = #{dlId,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey2" parameterType="java.lang.Long">
+		delete from dd_logs
+		where dl_id = #{dlId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert3"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		insert into dd_logs (dl_id, post_name, send_time,
+		status, error_code, error_message,
+		parameter)
+		values (#{dlId,jdbcType=BIGINT}, #{postName,jdbcType=VARCHAR},
+		#{sendTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=INTEGER}, #{errorCode,jdbcType=VARCHAR}, #{errorMessage,jdbcType=VARCHAR},
+		#{parameter,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective3"
+		parameterType="com.vendetech.project.tsms.domain.DdLog">
+		insert into dd_logs
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dlId != null">
+				dl_id,
+			</if>
+			<if test="postName != null">
+				post_name,
+			</if>
+			<if test="sendTime != null">
+				send_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="errorCode != null">
+				error_code,
+			</if>
+			<if test="errorMessage != null">
+				error_message,
+			</if>
+			<if test="parameter != null">
+				parameter,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dlId != null">
+				#{dlId,jdbcType=BIGINT},
+			</if>
+			<if test="postName != null">
+				#{postName,jdbcType=VARCHAR},
+			</if>
+			<if test="sendTime != null">
+				#{sendTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="errorCode != null">
+				#{errorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="errorMessage != null">
+				#{errorMessage,jdbcType=VARCHAR},
+			</if>
+			<if test="parameter != null">
+				#{parameter,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+</mapper>

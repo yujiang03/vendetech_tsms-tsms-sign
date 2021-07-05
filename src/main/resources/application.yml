@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: tsms
+
+  profiles:
+    #对应的yml名称格式必须是application-xxx
+    active: dev

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vendetech.project.tsms.mapper.DdUserTmpMapper">
+	<resultMap id="BaseResultMap"
+		type="com.vendetech.project.tsms.domain.DdUserTmp">
+		<id column="dd_user_id" jdbcType="VARCHAR" property="ddUserId" />
+		<result column="dd_user_name" jdbcType="VARCHAR"
+			property="ddUserName" />
+		<result column="dd_user_num" jdbcType="VARCHAR"
+			property="ddUserNum" />
+		<result column="dd_user_company" jdbcType="VARCHAR"
+			property="ddUserCompany" />
+		<result column="dd_user_mobile" jdbcType="VARCHAR"
+			property="ddUserMobile" />
+		<result column="dd_user_orgemail" jdbcType="VARCHAR"
+			property="ddUserOrgemail" />
+		<result column="dd_department_list" jdbcType="VARCHAR"
+			property="ddDepartmentList" />
+		<result column="dd_active_status" jdbcType="VARCHAR"
+			property="ddActiveStatus" />
+		<result column="dd_user_position" jdbcType="VARCHAR"
+			property="ddUserPosition" />
+		<result column="dd_user_avatar" jdbcType="VARCHAR"
+			property="ddUserAvatar" />
+		<result column="job_status" jdbcType="INTEGER"
+			property="jobStatus" />
+		<result column="create_time" jdbcType="TIMESTAMP"
+			property="createTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		dd_user_id, dd_user_name, dd_user_num, dd_user_company, dd_user_mobile,
+		dd_user_orgemail,
+		dd_department_list, dd_active_status, dd_user_position, dd_user_avatar, job_status,
+		create_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from dd_user_tmp
+		where dd_user_id = #{ddUserId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from dd_user_tmp
+		where dd_user_id = #{ddUserId,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="callRefreshUsers" statementType="CALLABLE">
+		{call
+		insertUpdateEmployeeProcess()}
+	</select>
+	
+	<select id="createEmployeeAccount" parameterType="java.util.Map" statementType="CALLABLE">
+		{call createEmployeeAccount(
+			#{loginName,mode=IN},
+			#{userName,mode=IN},
+			#{saltValue,mode=IN},
+			#{passwordNum,mode=IN},
+			#{avatarPath,mode=IN},
+			#{emailAddress,mode=IN}
+		)}
+	</select>
+	
+	<insert id="insert"
+		parameterType="com.vendetech.project.tsms.domain.DdUserTmp">
+		insert into dd_user_tmp (dd_user_id, dd_user_name, dd_user_num,
+		dd_user_company, dd_user_mobile, dd_user_orgemail,
+		dd_department_list, dd_active_status, dd_user_position,
+		dd_user_avatar, job_status, create_time
+		)
+		values (#{ddUserId,jdbcType=VARCHAR}, #{ddUserName,jdbcType=VARCHAR},
+		#{ddUserNum,jdbcType=VARCHAR},
+		#{ddUserCompany,jdbcType=VARCHAR}, 
+		#{ddUserMobile,jdbcType=VARCHAR}, 
+		#{ddUserOrgemail,jdbcType=VARCHAR},
+		#{ddDepartmentList,jdbcType=VARCHAR},
+		#{ddActiveStatus,jdbcType=VARCHAR},
+		#{ddUserPosition,jdbcType=VARCHAR},
+		#{ddUserAvatar,jdbcType=VARCHAR}, 
+		#{jobStatus,jdbcType=INTEGER}, 
+		#{createTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vendetech.project.tsms.domain.DdUserTmp">
+		insert into dd_user_tmp
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ddUserId != null">
+				dd_user_id,
+			</if>
+			<if test="ddUserName != null">
+				dd_user_name,
+			</if>
+			<if test="ddUserNum != null">
+				dd_user_num,
+			</if>
+			<if test="ddUserCompany != null">
+				dd_user_company,
+			</if>
+			<if test="ddUserMobile != null">
+				dd_user_mobile,
+			</if>
+			<if test="ddUserOrgemail != null">
+				dd_user_orgemail,
+			</if>
+			<if test="ddDepartmentList != null">
+				dd_department_list,
+			</if>
+			<if test="ddActiveStatus != null">
+				dd_active_status,
+			</if>
+			<if test="ddUserPosition != null">
+				dd_user_position,
+			</if>
+			<if test="ddUserAvatar != null">
+				dd_user_avatar,
+			</if>
+			<if test="jobStatus != null">
+				job_status,
+			</if>
+			
+				create_time,
+			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ddUserId != null">
+				#{ddUserId,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserName != null">
+				#{ddUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserNum != null">
+				#{ddUserNum,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserCompany != null">
+				#{ddUserCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserMobile != null">
+				#{ddUserMobile,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserOrgemail != null">
+				#{ddUserOrgemail,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentList != null">
+				#{ddDepartmentList,jdbcType=VARCHAR},
+			</if>
+			<if test="ddActiveStatus != null">
+				#{ddActiveStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserPosition != null">
+				#{ddUserPosition,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserAvatar != null">
+				#{ddUserAvatar,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStatus != null">
+				#{jobStatus,jdbcType=INTEGER},
+			</if>
+			now(),
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vendetech.project.tsms.domain.DdUserTmp">
+		update dd_user_tmp
+		<set>
+			<if test="ddUserName != null">
+				dd_user_name = #{ddUserName,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserNum != null">
+				dd_user_num = #{ddUserNum,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserCompany != null">
+				dd_user_company = #{ddUserCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserMobile != null">
+				dd_user_mobile = #{ddUserMobile,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserOrgemail != null">
+				dd_user_orgemail = #{ddUserOrgemail,jdbcType=VARCHAR},
+			</if>
+			<if test="ddDepartmentList != null">
+				dd_department_list = #{ddDepartmentList,jdbcType=VARCHAR},
+			</if>
+			<if test="ddActiveStatus != null">
+				dd_active_status = #{ddActiveStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserPosition != null">
+				dd_user_position = #{ddUserPosition,jdbcType=VARCHAR},
+			</if>
+			<if test="ddUserAvatar != null">
+				dd_user_avatar = #{ddUserAvatar,jdbcType=VARCHAR},
+			</if>
+			<if test="jobStatus != null">
+				job_status = #{jobStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where dd_user_id = #{ddUserId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vendetech.project.tsms.domain.DdUserTmp">
+		update dd_user_tmp
+		set dd_user_name = #{ddUserName,jdbcType=VARCHAR},
+		dd_user_num = #{ddUserNum,jdbcType=VARCHAR},
+		dd_user_company = #{ddUserCompany,jdbcType=VARCHAR},
+		dd_user_mobile = #{ddUserMobile,jdbcType=VARCHAR},
+		dd_user_orgemail = #{ddUserOrgemail,jdbcType=VARCHAR},
+		dd_department_list = #{ddDepartmentList,jdbcType=VARCHAR},
+		dd_active_status = #{ddActiveStatus,jdbcType=VARCHAR},
+		dd_user_position = #{ddUserPosition,jdbcType=VARCHAR},
+		dd_user_avatar = #{ddUserAvatar,jdbcType=VARCHAR},
+		job_status = #{jobStatus,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		where dd_user_id = #{ddUserId,jdbcType=VARCHAR}
+	</update>
+</mapper>

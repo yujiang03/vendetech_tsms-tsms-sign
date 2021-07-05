@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vendetech.project.tsms.timesheet.mapper.CalendarsMapper" >
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.Calendars" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="workday" property="workday" jdbcType="DATE" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, workday, type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from calendars
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from calendars
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.vendetech.project.tsms.domain.Calendars" >
+    insert into calendars (id, workday, type
+      )
+    values (#{id,jdbcType=BIGINT}, #{workday,jdbcType=DATE}, #{type,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertCalendars" parameterType="com.vendetech.project.tsms.domain.Calendars" >
+    insert into calendars (workday, type)
+    values (#{workday,jdbcType=DATE}, #{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.Calendars" >
+    insert into calendars
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="workday != null" >
+        workday,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="workday != null" >
+        #{workday,jdbcType=DATE},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vendetech.project.tsms.domain.Calendars" >
+    update calendars
+    <set >
+      <if test="workday != null" >
+        workday = #{workday,jdbcType=DATE},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vendetech.project.tsms.domain.Calendars" >
+    update calendars
+    set workday = #{workday,jdbcType=DATE},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

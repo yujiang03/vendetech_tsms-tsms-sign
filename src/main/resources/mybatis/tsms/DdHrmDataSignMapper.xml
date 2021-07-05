@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vendetech.project.tsms.mapper.DdHrmDataSignMapper">
+  <resultMap id="BaseResultMap" type="com.vendetech.project.tsms.domain.DdHrmDataSign">
+    <result column="dd_user_id" property="ddUserId" jdbcType="VARCHAR"/>
+    <result column="dd_job_number" property="ddJobNumber" jdbcType="VARCHAR"/>
+    <result column="dd_name" property="ddName" jdbcType="VARCHAR"/>
+    <result column="dd_position" property="ddPosition" jdbcType="VARCHAR"/>
+    <result column="dd_sex_type" property="ddSexType" jdbcType="INTEGER"/>
+    <result column="dd_birth_time" property="ddBirthTime" jdbcType="VARCHAR"/>
+    <result column="dd_cert_address" property="ddCertAddress" jdbcType="VARCHAR"/>
+    <result column="dd_address" property="ddAddress" jdbcType="VARCHAR"/>
+    <result column="dd_cert_no" property="ddCertNo" jdbcType="VARCHAR"/>
+    <result column="dd_mobile" property="ddMobile" jdbcType="VARCHAR"/>
+    <result column="dd_work_city" property="ddWorkCity" jdbcType="VARCHAR"/>
+    <result column="dd_now_contract_start_time" property="ddNowContractStartTime" jdbcType="VARCHAR"/>
+    <result column="dd_now_contract_end_time" property="ddNowContractEndTime" jdbcType="VARCHAR"/>
+    <result column="dd_probation_period_type" property="ddProbationPeriodType" jdbcType="VARCHAR"/>
+    <result column="dd_regular_time" property="ddRegularTime" jdbcType="VARCHAR"/>
+    <result column="dd_confirm_join_time" property="ddConfirmJoinTime" jdbcType="VARCHAR"/>
+    <result column="dd_graduate_school" property="ddGraduateSchool" jdbcType="VARCHAR"/>
+    <result column="dd_email" property="ddEmail" jdbcType="VARCHAR"/>
+    <result column="dd_bank_account_no" property="ddBankAccountNo" jdbcType="VARCHAR"/>
+    <result column="dd_account_bank" property="ddAccountBank" jdbcType="VARCHAR"/>
+    <result column="dd_main_dept_id" property="ddMainDeptId" jdbcType="BIGINT"/>
+    <result column="dd_main_dept" property="ddMainDept" jdbcType="VARCHAR"/>
+    <result column="dd_company_name" property="ddCompanyName" jdbcType="VARCHAR"/>
+    <result column="dd_ts_excl_flag" property="ddTsExclFlag" jdbcType="INTEGER"/>
+    <result column="job_status" property="jobStatus" jdbcType="INTEGER"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+  <insert id="insertSelective" parameterType="com.vendetech.project.tsms.domain.DdHrmDataSign">
+    insert into dd_hrm_data_sign
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ddUserId != null">
+        dd_user_id,
+      </if>
+      <if test="ddJobNumber != null">
+        dd_job_number,
+      </if>
+      <if test="ddName != null">
+        dd_name,
+      </if>
+      <if test="ddPosition != null">
+        dd_position,
+      </if>
+      <if test="ddSexType != null">
+        dd_sex_type,
+      </if>
+      <if test="ddBirthTime != null">
+        dd_birth_time,
+      </if>
+      <if test="ddCertAddress != null">
+        dd_cert_address,
+      </if>
+      <if test="ddAddress != null">
+        dd_address,
+      </if>
+      <if test="ddCertNo != null">
+        dd_cert_no,
+      </if>
+      <if test="ddMobile != null">
+        dd_mobile,
+      </if>
+      <if test="ddWorkCity != null">
+        dd_work_city,
+      </if>
+      <if test="ddNowContractStartTime != null">
+        dd_now_contract_start_time,
+      </if>
+      <if test="ddNowContractEndTime != null">
+        dd_now_contract_end_time,
+      </if>
+      <if test="ddProbationPeriodType != null">
+        dd_probation_period_type,
+      </if>
+      <if test="ddRegularTime != null">
+        dd_regular_time,
+      </if>
+      <if test="ddConfirmJoinTime != null">
+        dd_confirm_join_time,
+      </if>
+      <if test="ddGraduateSchool != null">
+        dd_graduate_school,
+      </if>
+      <if test="ddEmail != null">
+        dd_email,
+      </if>
+      <if test="ddBankAccountNo != null">
+        dd_bank_account_no,
+      </if>
+      <if test="ddAccountBank != null">
+        dd_account_bank,
+      </if>
+      <if test="ddMainDeptId != null">
+        dd_main_dept_id,
+      </if>
+      <if test="ddMainDept != null">
+        dd_main_dept,
+      </if>
+      <if test="ddCompanyName != null">
+        dd_company_name,
+      </if>
+      <if test="ddTsExclFlag != null">
+        dd_ts_excl_flag,
+      </if>
+      <if test="jobStatus != null">
+        job_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ddUserId != null">
+        #{ddUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="ddJobNumber != null">
+        #{ddJobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="ddName != null">
+        #{ddName,jdbcType=VARCHAR},
+      </if>
+      <if test="ddPosition != null">
+        #{ddPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="ddSexType != null">
+        #{ddSexType,jdbcType=INTEGER},
+      </if>
+      <if test="ddBirthTime != null">
+        #{ddBirthTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddCertAddress != null">
+        #{ddCertAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ddAddress != null">
+        #{ddAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ddCertNo != null">
+        #{ddCertNo,jdbcType=BIGINT},
+      </if>
+      <if test="ddMobile != null">
+        #{ddMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ddWorkCity != null">
+        #{ddWorkCity,jdbcType=VARCHAR},
+      </if>
+      <if test="ddNowContractStartTime != null">
+        #{ddNowContractStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddNowContractEndTime != null">
+        #{ddNowContractEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddProbationPeriodType != null">
+        #{ddProbationPeriodType,jdbcType=VARCHAR},
+      </if>
+      <if test="ddRegularTime != null">
+        #{ddRegularTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddConfirmJoinTime != null">
+        #{ddConfirmJoinTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddGraduateSchool != null">
+        #{ddGraduateSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="ddEmail != null">
+        #{ddEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="ddBankAccountNo != null">
+        #{ddBankAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ddAccountBank != null">
+        #{ddAccountBank,jdbcType=VARCHAR},
+      </if>
+      <if test="ddMainDeptId != null">
+        #{ddMainDeptId,jdbcType=BIGINT},
+      </if>
+      <if test="ddMainDept != null">
+        #{ddMainDept,jdbcType=VARCHAR},
+      </if>
+      <if test="ddCompanyName != null">
+        #{ddCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="ddTsExclFlag != null">
+        #{ddTsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="jobStatus != null">
+        #{jobStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateSelective" parameterType="com.vendetech.project.tsms.domain.DdHrmDataSign">
+    update dd_hrm_data_sign
+    <set>
+      <if test="ddUserId != null">
+        dd_user_id = #{ddUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="ddJobNumber != null">
+        dd_job_number = #{ddJobNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="ddName != null">
+        dd_name = #{ddName,jdbcType=VARCHAR},
+      </if>
+      <if test="ddPosition != null">
+        dd_position = #{ddPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="ddSexType != null">
+        dd_sex_type = #{ddSexType,jdbcType=INTEGER},
+      </if>
+      <if test="ddBirthTime != null">
+        dd_birth_time = #{ddBirthTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddCertAddress != null">
+        dd_cert_address = #{ddCertAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ddAddress != null">
+        dd_address = #{ddAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ddCertNo != null">
+        dd_cert_no = #{ddCertNo,jdbcType=BIGINT},
+      </if>
+      <if test="ddMobile != null">
+        dd_mobile = #{ddMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ddWorkCity != null">
+        dd_work_city = #{ddWorkCity,jdbcType=VARCHAR},
+      </if>
+      <if test="ddNowContractStartTime != null">
+        dd_now_contract_start_time = #{ddNowContractStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddNowContractEndTime != null">
+        dd_now_contract_end_time = #{ddNowContractEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddProbationPeriodType != null">
+        dd_probation_period_type = #{ddProbationPeriodType,jdbcType=VARCHAR},
+      </if>
+      <if test="ddRegularTime != null">
+        dd_regular_time = #{ddRegularTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddConfirmJoinTime != null">
+        dd_confirm_join_time = #{ddConfirmJoinTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ddGraduateSchool != null">
+        dd_graduate_school = #{ddGraduateSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="ddEmail != null">
+        dd_email = #{ddEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="ddBankAccountNo != null">
+        dd_bank_account_no = #{ddBankAccountNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ddAccountBank != null">
+        dd_account_bank = #{ddAccountBank,jdbcType=VARCHAR},
+      </if>
+      <if test="ddMainDeptId != null">
+        dd_main_dept_id = #{ddMainDeptId,jdbcType=BIGINT},
+      </if>
+      <if test="ddMainDept != null">
+        dd_main_dept = #{ddMainDept,jdbcType=VARCHAR},
+      </if>
+      <if test="ddCompanyName != null">
+        dd_company_name = #{ddCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="ddTsExclFlag != null">
+        dd_ts_excl_flag = #{ddTsExclFlag,jdbcType=INTEGER},
+      </if>
+      <if test="jobStatus != null">
+        job_status = #{jobStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <where>
+      <if test="ddJobNumber != null">
+         and dd_job_number = #{ddJobNumber,jdbcType=VARCHAR},
+      </if>
+    </where>
+  </update>
+
+  <insert id="batchInsertHrmDataSign" parameterType="com.vendetech.project.tsms.domain.DdHrmDataSign">
+    insert into dd_hrm_data_sign (dd_user_id, dd_job_number, dd_name, dd_position, dd_sex_type, dd_birth_time, dd_cert_address,
+                                  dd_address, dd_cert_no, dd_mobile, dd_work_city, dd_now_contract_start_time,
+                                  dd_now_contract_end_time, dd_probation_period_type, dd_regular_time,
+                                  dd_confirm_join_time, dd_graduate_school, dd_email, dd_bank_account_no,
+                                  dd_account_bank, dd_main_dept_id, dd_main_dept, dd_company_name, dd_ts_excl_flag,
+                                  job_status, create_time) values
+
+    <foreach collection="list" item="record" separator=",">
+      (#{record.ddUserId}, #{record.ddJobNumber}, #{record.ddName}, #{record.ddPosition}, #{record.ddSexType}, #{record.ddBirthTime}, #{record.ddCertAddress}
+      , #{record.ddAddress}, #{record.ddCertNo}, #{record.ddMobile}, #{record.ddWorkCity}, #{record.ddNowContractStartTime}
+      , #{record.ddNowContractEndTime}, #{record.ddProbationPeriodType}, #{record.ddRegularTime}
+      , #{record.ddConfirmJoinTime}, #{record.ddGraduateSchool}, #{record.ddEmail}, #{record.ddBankAccountNo}
+      , #{record.ddAccountBank}, #{record.ddMainDeptId}, #{record.ddMainDept}, #{record.ddCompanyName}, #{record.ddTsExclFlag}
+      , #{record.jobStatus}, #{record.createTime})
+    </foreach>
+  </insert>
+
+  <select id="selectByJobNumber" resultMap="BaseResultMap">
+    select dd_user_id, dd_job_number, dd_name, dd_position, dd_sex_type, dd_birth_time, dd_cert_address, dd_address, dd_cert_no,
+           dd_mobile, dd_work_city, dd_now_contract_start_time, dd_now_contract_end_time, dd_probation_period_type,
+           dd_regular_time, dd_confirm_join_time, dd_graduate_school, dd_email, dd_bank_account_no, dd_account_bank,
+           dd_main_dept_id, dd_main_dept, dd_company_name, dd_ts_excl_flag, job_status, create_time
+    from dd_hrm_data_sign
+    where dd_job_number = #{ddJobNumber}
+  </select>
+
+</mapper>
